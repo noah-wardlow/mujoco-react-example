@@ -1,8 +1,11 @@
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent);
+const MOD = isMac ? '⌘' : 'Ctrl';
+
 const HELP: Record<string, string[]> = {
   franka: [
     'V — Toggle gripper',
     'Drag gizmo — Move arm (IK)',
-    'Ctrl+click — Drag body',
+    `${MOD}+click — Drag body`,
     'Double-click — Select body',
   ],
   so101: [
