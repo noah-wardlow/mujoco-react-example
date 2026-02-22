@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
-import { useBeforePhysicsStep, useIk } from 'mujoco-react';
+import { useBeforePhysicsStep } from 'mujoco-react';
+import type { IkContextValue } from 'mujoco-react';
 import { inverseKinematics2Link } from './ik2link';
 import { forwardKinematics2Link } from './fk2link';
 import type { LinkageParams } from './ik2link';
@@ -68,9 +69,8 @@ const INITIAL_EE = [0.162, 0.118] satisfies [number, number];
  * Automatically disables the library's IK solver when arm keys are pressed,
  * syncing from the current arm position so there's no jump.
  */
-export function useArmController(config: ArmControllerConfig) {
+export function useArmController(config: ArmControllerConfig, ik?: IkContextValue | null) {
   const keys = useRef<Record<string, boolean>>({});
-  const ikCtx = useIk({ optional: true });
 
   const armStates = useRef(
     config.arms.map((arm) => {
@@ -179,16 +179,16 @@ export function useArmController(config: ArmControllerConfig) {
         s.eePos[0] = x;
         s.eePos[1] = y;
         s.pitch = s.targetJoints[3] - s.targetJoints[1] + s.targetJoints[2];
-        s.ikWasEnabled = ikCtx?.ikEnabledRef.current ?? false;
-        if (s.ikWasEnabled) ikCtx!.setIkEnabled(false);
+        s.ikWasEnabled = ik?.ikEnabledRef.current ?? false;
+        if (s.ikWasEnabled) ik!.setIkEnabled(false);
         s.controlActive = true;
       }
 
       // On transition from keyboard to idle: re-sync IK target so arm holds position
       if (!anyArmKey) {
-        if (s.controlActive && s.ikWasEnabled && ikCtx) {
-          ikCtx.syncTargetToSite();
-          ikCtx.setIkEnabled(true);
+        if (s.controlActive && s.ikWasEnabled && ik) {
+          ik.syncTargetToSite();
+          ik.setIkEnabled(true);
         }
         s.controlActive = false;
       }

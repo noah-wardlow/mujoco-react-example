@@ -1,5 +1,6 @@
 import { useArmController } from './useArmController';
 import type { ArmControllerConfig } from './useArmController';
+import type { IkContextValue } from 'mujoco-react';
 import { XLEROBOT_HOME_JOINTS } from '../configs';
 
 const config: ArmControllerConfig = {
@@ -27,7 +28,7 @@ const config: ArmControllerConfig = {
   },
 };
 
-export function XLeRobotController() {
-  useArmController(config);
+export function XLeRobotController({ ik }: { ik?: IkContextValue | null }) {
+  useArmController(config, ik);
   return null;
 }

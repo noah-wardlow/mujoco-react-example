@@ -1,5 +1,6 @@
 import { useArmController } from './useArmController';
 import type { ArmControllerConfig } from './useArmController';
+import type { IkContextValue } from 'mujoco-react';
 
 const config: ArmControllerConfig = {
   numActuators: 6,
@@ -10,7 +11,7 @@ const config: ArmControllerConfig = {
   }],
 };
 
-export function SO101Controller() {
-  useArmController(config);
+export function SO101Controller({ ik }: { ik?: IkContextValue | null }) {
+  useArmController(config, ik);
   return null;
 }

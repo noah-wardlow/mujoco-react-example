@@ -4,7 +4,7 @@ import { useControls, button } from 'leva';
 import {
   MujocoProvider,
   MujocoCanvas,
-  IkController,
+  useIkController,
   IkGizmo,
   DragInteraction,
   ContactMarkers,
@@ -13,7 +13,7 @@ import {
   useMujoco,
   useGravityCompensation,
 } from 'mujoco-react';
-import type { MujocoSimAPI } from 'mujoco-react';
+import type { MujocoSimAPI, IkConfig } from 'mujoco-react';
 import { robots } from './configs';
 import { FrankaController } from './controllers/FrankaController';
 import { SO101Controller } from './controllers/SO101Controller';
@@ -22,8 +22,8 @@ import { useClickSelect } from './useClickSelect';
 import { KeyboardHelp } from './KeyboardHelp';
 
 function LoadingOverlay() {
-  const { status } = useMujoco();
-  if (status === 'ready') return null;
+  const sim = useMujoco();
+  if (sim.isReady) return null;
   return (
     <Html center>
       <div style={{
@@ -31,11 +31,11 @@ function LoadingOverlay() {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 12,
-        color: status === 'error' ? '#f87171' : '#94a3b8',
+        color: sim.isError ? '#f87171' : '#94a3b8',
         fontFamily: 'system-ui, sans-serif',
       }}>
-        {status === 'error' ? (
-          <span style={{ fontSize: 14 }}>Failed to load model. Check console.</span>
+        {sim.isError ? (
+          <span style={{ fontSize: 14 }}>{sim.error}</span>
         ) : (
           <>
             <div style={{
@@ -68,6 +68,32 @@ function ClickSelectOverlay() {
   return null;
 }
 
+/** Scene children that need hooks (useIkController) */
+function SceneChildren({
+  robotKey,
+  ikConfig,
+  showGizmo,
+  gizmoScale,
+}: {
+  robotKey: string;
+  ikConfig: IkConfig | null;
+  showGizmo: boolean;
+  gizmoScale?: number;
+}) {
+  const ik = useIkController(ikConfig);
+
+  return (
+    <>
+      {ik && showGizmo && <IkGizmo controller={ik} scale={gizmoScale} />}
+
+      {/* Per-robot controllers — swap in your own */}
+      {robotKey === 'franka' && <FrankaController />}
+      {robotKey === 'so101' && <SO101Controller ik={ik} />}
+      {robotKey === 'xlerobot' && <XLeRobotController ik={ik} />}
+    </>
+  );
+}
+
 const robotOptions = Object.fromEntries(
   Object.entries(robots).map(([key, r]) => [r.label, key])
 );
@@ -96,6 +122,8 @@ export function App() {
   });
 
   const canvasKey = useMemo(() => robotKey, [robotKey]);
+
+  const ikConfig = entry.hasIk && entry.ikConfig ? entry.ikConfig : null;
 
   return (
     <MujocoProvider>
@@ -126,19 +154,17 @@ export function App() {
         <LoadingOverlay />
         <GravityCompensation enabled={sim.gravityCompensation} />
 
-        {/* Opt-in interaction — each is an independent composable child */}
-        {entry.hasIk && entry.ikConfig && sim.gizmo && (
-          <IkController config={entry.ikConfig}>
-            <IkGizmo scale={entry.gizmoScale} />
-          </IkController>
-        )}
+        {/* IK + per-robot controllers */}
+        <SceneChildren
+          robotKey={robotKey}
+          ikConfig={ikConfig}
+          showGizmo={sim.gizmo}
+          gizmoScale={entry.gizmoScale}
+        />
+
+        {/* Opt-in interaction */}
         <DragInteraction />
         <ClickSelectOverlay />
-
-        {/* Per-robot controllers — swap in your own */}
-        {robotKey === 'franka' && <FrankaController />}
-        {robotKey === 'so101' && <SO101Controller />}
-        {robotKey === 'xlerobot' && <XLeRobotController />}
 
         {/* Debug overlays */}
         <ContactMarkers visible={debug.contacts} />
