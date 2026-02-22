@@ -24,7 +24,7 @@ export const robots: Record<string, RobotEntry> = {
   franka: {
     label: 'Franka Panda',
     config: {
-      modelId: 'franka_emika_panda',
+      src: 'https://raw.githubusercontent.com/google-deepmind/mujoco_menagerie/main/franka_emika_panda/',
       sceneFile: 'scene.xml',
       homeJoints: [1.707, -1.754, 0.003, -2.702, 0.003, 0.951, 2.49],
       xmlPatches: [
@@ -87,9 +87,8 @@ export const robots: Record<string, RobotEntry> = {
   so101: {
     label: 'SO101',
     config: {
-      modelId: 'so101',
+      src: XLEROBOT_BASE,
       sceneFile: 'SO101.xml',
-      baseUrl: XLEROBOT_BASE,
       homeJoints: [0.0158, 2.052, 2.1307, -0.0845, 1.5857, -0.3745],
       xmlPatches: [
         {
@@ -152,9 +151,8 @@ export const robots: Record<string, RobotEntry> = {
   xlerobot: {
     label: 'XLeRobot',
     config: {
-      modelId: 'xlerobot',
+      src: XLEROBOT_BASE,
       sceneFile: 'xlerobot.xml',
-      baseUrl: XLEROBOT_BASE,
       // 16 actuators: [forward, turn, L_rot, L_pitch, L_elbow, L_wristP, L_wristR, L_jaw,
       //                R_rot, R_pitch, R_elbow, R_wristP, R_wristR, R_jaw, head_pan, head_tilt]
       homeJoints: XLEROBOT_HOME_JOINTS,
