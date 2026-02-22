@@ -84,7 +84,7 @@ export function App() {
   const sim = useControls('Simulation', {
     paused: false,
     speed: { value: 1.0, min: 0.1, max: 3.0, step: 0.1 },
-    gravityCompensation: { value: true, label: 'gravity compensation' },
+    gravityCompensation: { value: false, label: 'gravity compensation' },
     gizmo: { value: true, label: 'IK gizmo' },
     reset: button(() => apiRef.current?.reset()),
   });
