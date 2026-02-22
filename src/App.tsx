@@ -9,7 +9,7 @@ import {
   DragInteraction,
   ContactMarkers,
   Debug,
-  SelectionHighlight,
+  useSelectionHighlight,
   useMujoco,
   useGravityCompensation,
 } from 'mujoco-react';
@@ -61,10 +61,11 @@ function GravityCompensation({ enabled }: { enabled: boolean }) {
   return null;
 }
 
-/** Composable click-to-select — uses the hook + library component. */
+/** Composable click-to-select — uses hooks. */
 function ClickSelectOverlay() {
   const selectedBodyId = useClickSelect();
-  return <SelectionHighlight bodyId={selectedBodyId} />;
+  useSelectionHighlight(selectedBodyId);
+  return null;
 }
 
 const robotOptions = Object.fromEntries(
