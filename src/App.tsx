@@ -4,14 +4,13 @@ import { useControls, button } from 'leva';
 import {
   MujocoProvider,
   MujocoCanvas,
-  SceneRenderer,
   IkController,
   IkGizmo,
   DragInteraction,
   ContactMarkers,
   Debug,
   SelectionHighlight,
-  useMujocoSim,
+  useMujoco,
   useGravityCompensation,
 } from 'mujoco-react';
 import type { MujocoSimAPI } from 'mujoco-react';
@@ -23,7 +22,7 @@ import { useClickSelect } from './useClickSelect';
 import { KeyboardHelp } from './KeyboardHelp';
 
 function LoadingOverlay() {
-  const { status } = useMujocoSim();
+  const { status } = useMujoco();
   if (status === 'ready') return null;
   return (
     <Html center>
@@ -124,7 +123,6 @@ export function App() {
 
         {/* Core scene */}
         <LoadingOverlay />
-        <SceneRenderer />
         <GravityCompensation enabled={sim.gravityCompensation} />
 
         {/* Opt-in interaction — each is an independent composable child */}

@@ -24,7 +24,7 @@ export const robots: Record<string, RobotEntry> = {
   franka: {
     label: 'Franka Panda',
     config: {
-      robotId: 'franka_emika_panda',
+      modelId: 'franka_emika_panda',
       sceneFile: 'scene.xml',
       homeJoints: [1.707, -1.754, 0.003, -2.702, 0.003, 0.951, 2.49],
       xmlPatches: [
@@ -87,7 +87,7 @@ export const robots: Record<string, RobotEntry> = {
   so101: {
     label: 'SO101',
     config: {
-      robotId: 'so101',
+      modelId: 'so101',
       sceneFile: 'SO101.xml',
       baseUrl: XLEROBOT_BASE,
       homeJoints: [0.0158, 2.052, 2.1307, -0.0845, 1.5857, -0.3745],
@@ -123,6 +123,8 @@ export const robots: Record<string, RobotEntry> = {
           mass: 0.02,
           freejoint: true,
           friction: '2 0.3 0.1',
+          solref: '0.01 1',
+          solimp: '0.95 0.99 0.001 0.5 2',
           condim: 4,
         },
         {
@@ -134,6 +136,8 @@ export const robots: Record<string, RobotEntry> = {
           mass: 0.02,
           freejoint: true,
           friction: '2 0.3 0.1',
+          solref: '0.01 1',
+          solimp: '0.95 0.99 0.001 0.5 2',
           condim: 4,
         },
       ],
@@ -148,7 +152,7 @@ export const robots: Record<string, RobotEntry> = {
   xlerobot: {
     label: 'XLeRobot',
     config: {
-      robotId: 'xlerobot',
+      modelId: 'xlerobot',
       sceneFile: 'xlerobot.xml',
       baseUrl: XLEROBOT_BASE,
       // 16 actuators: [forward, turn, L_rot, L_pitch, L_elbow, L_wristP, L_wristR, L_jaw,

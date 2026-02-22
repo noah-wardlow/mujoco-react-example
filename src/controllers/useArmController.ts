@@ -100,7 +100,7 @@ export function useArmController(config: ArmControllerConfig) {
         targetJoints[5] = gripperClosed;
       }
 
-      return { targetJoints, eePos, pitch, gripperOpen: false, gripperKeyWasDown: false };
+      return { targetJoints, eePos, pitch, gripperOpen: false, gripperKeyWasDown: false, controlActive: false, ikWasEnabled: false };
     }),
   );
 
@@ -169,8 +169,9 @@ export function useArmController(config: ArmControllerConfig) {
         if (k[ak[j]]) { anyArmKey = true; break; }
       }
 
-      // On transition from gizmo→keyboard: sync state from current ctrl
-      if (anyArmKey && ikCtx?.ikEnabledRef.current) {
+      // On transition from idle to keyboard: sync state from current ctrl
+      // (picks up IK gizmo position, post-reset homeJoints, or any external ctrl change)
+      if (anyArmKey && !s.controlActive) {
         for (let j = 0; j < arm.indices.length; j++) {
           s.targetJoints[j] = data.ctrl[arm.indices[j]];
         }
@@ -178,7 +179,18 @@ export function useArmController(config: ArmControllerConfig) {
         s.eePos[0] = x;
         s.eePos[1] = y;
         s.pitch = s.targetJoints[3] - s.targetJoints[1] + s.targetJoints[2];
-        ikCtx.setIkEnabled(false);
+        s.ikWasEnabled = ikCtx?.ikEnabledRef.current ?? false;
+        if (s.ikWasEnabled) ikCtx!.setIkEnabled(false);
+        s.controlActive = true;
+      }
+
+      // On transition from keyboard to idle: re-sync IK target so arm holds position
+      if (!anyArmKey) {
+        if (s.controlActive && s.ikWasEnabled && ikCtx) {
+          ikCtx.syncTargetToSite();
+          ikCtx.setIkEnabled(true);
+        }
+        s.controlActive = false;
       }
 
       // Shoulder rotation
@@ -214,10 +226,14 @@ export function useArmController(config: ArmControllerConfig) {
       s.targetJoints[2] = j3;
       s.targetJoints[3] = j2 - j3 + s.pitch;
 
-      // Write to ctrl
-      for (let j = 0; j < arm.indices.length; j++) {
-        data.ctrl[arm.indices[j]] = s.targetJoints[j];
+      // Write arm joints to ctrl only when keyboard is active
+      if (s.controlActive) {
+        for (let j = 0; j < arm.indices.length; j++) {
+          data.ctrl[arm.indices[j]] = s.targetJoints[j];
+        }
       }
+      // Always write gripper (last index) — independent of IK
+      data.ctrl[arm.indices[arm.indices.length - 1]] = s.targetJoints[arm.indices.length - 1];
     }
 
     // === Head ===
