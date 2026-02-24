@@ -20,6 +20,7 @@ import { SO101Controller } from './controllers/SO101Controller';
 import { XLeRobotController } from './controllers/XLeRobotController';
 import { useClickSelect } from './useClickSelect';
 import { KeyboardHelp } from './KeyboardHelp';
+import { GitHubLink } from './GitHubLink';
 
 function LoadingOverlay() {
   const sim = useMujoco();
@@ -184,6 +185,7 @@ export function App() {
 
       {/* HTML overlay — outside R3F canvas */}
       <KeyboardHelp robotKey={robotKey} />
+      <GitHubLink />
     </MujocoProvider>
   );
 }
