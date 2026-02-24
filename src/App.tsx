@@ -1,5 +1,5 @@
 import { useRef, useMemo } from 'react';
-import { OrbitControls, Html, Stats } from '@react-three/drei';
+import { OrbitControls, Html, Stats, Environment } from '@react-three/drei';
 import { useControls, button } from 'leva';
 import {
   MujocoProvider,
@@ -171,12 +171,13 @@ export function App() {
         <ContactMarkers visible={debug.contacts} />
         <Debug showSites={debug.sites} showJoints={debug.joints} />
 
-        {/* Scene decoration — lights, grid */}
-        <ambientLight intensity={0.6} />
+        {/* Scene decoration — lights, environment, grid */}
+        <Environment preset="lobby" background backgroundBlurriness={1} backgroundIntensity={0.6} environmentIntensity={0.5} />
+        <ambientLight intensity={0.4} />
         <directionalLight position={[2, -2, 5]} intensity={1.5} castShadow />
-        <directionalLight position={[-1, 1, 3]} intensity={0.4} />
+        <directionalLight position={[-1, 1, 3]} intensity={0.3} />
         <gridHelper
-          args={[4, 40, '#334155', '#1e293b']}
+          args={[4, 40, '#64748b', '#94a3b8']}
           rotation={[Math.PI / 2, 0, 0]}
           position={[0, 0, 0.001]}
         />
