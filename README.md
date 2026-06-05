@@ -9,6 +9,8 @@ Interactive example app for [mujoco-react](https://www.npmjs.com/package/mujoco-
 | **Franka Panda** | IK gizmo + gripper toggle (V) | 7-DOF arm, gizmo drag, click-to-select, graspable cubes |
 | **SO101** | Keyboard IK + gizmo | 2-link IK (WASD/QE), wrist (R/F, Z/C), gripper (V) |
 | **XLeRobot** | Keyboard + dual arms | Mobile base (WASD), dual-arm IK, head pan/tilt, grippers (V/B) |
+| **Spot** | Joint-hold showcase | Boston Dynamics Spot from MuJoCo Menagerie, debug overlays, drag/select |
+| **Unitree G1** | Free-base physics showcase | Unitree G1 humanoid from MuJoCo Menagerie, falls naturally, debug overlays, drag/select |
 
 ## Getting Started
 
@@ -40,6 +42,7 @@ The app demonstrates the **composable children** pattern — each feature is an 
     {robotKey === 'franka' && <FrankaController />}
     {robotKey === 'so101' && <SO101Controller />}
     {robotKey === 'xlerobot' && <XLeRobotController />}
+    {entry.holdCtrl && <HoldCtrl values={entry.holdCtrl} />}
 
     {/* Debug overlays */}
     <ContactMarkers visible={debug.contacts} />
@@ -159,22 +162,23 @@ Without `condim: 4` and high friction, blocks will slide out of the gripper when
 
 The [Leva](https://github.com/pmndrs/leva) panel provides runtime controls:
 
-- **Robot** — switch between Franka, SO101, XLeRobot
+- **Robot** — switch between Franka, SO101, XLeRobot, Spot, Unitree G1
 - **Simulation** — pause, speed, gravity compensation, IK gizmo toggle, reset
 - **Debug** — contacts, sites, joints visualization
 
 ## Key Bindings
 
-| Key | Franka | SO101 | XLeRobot |
-|-----|--------|-------|----------|
-| WASD | -- | EE forward/back/up/down | Base drive |
-| Q/E | -- | EE left/right | -- |
-| R/F | -- | Wrist pitch | Head pan |
-| Z/C | -- | Wrist roll | -- |
-| V | Gripper toggle | Gripper toggle | Left gripper |
-| B | -- | -- | Right gripper |
-| 7-0, Y/U/I/O | -- | -- | Left arm |
-| H-L, N-/ | -- | -- | Right arm |
+| Key | Franka | SO101 | XLeRobot | Spot / G1 |
+|-----|--------|-------|----------|-----------|
+| WASD | -- | EE forward/back/up/down | Base drive | -- |
+| Q/E | -- | EE left/right | -- | -- |
+| R/F | -- | Wrist pitch | Head pan | -- |
+| Z/C | -- | Wrist roll | -- | -- |
+| V | Gripper toggle | Gripper toggle | Left gripper | -- |
+| B | -- | -- | Right gripper | -- |
+| 7-0, Y/U/I/O | -- | -- | Left arm | -- |
+| H-L, N-/ | -- | -- | Right arm | -- |
+| Double-click | Select body | Select body | Select body | Select body |
 
 ## Building
 

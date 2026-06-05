@@ -1,4 +1,4 @@
-import type { SceneConfig } from 'mujoco-react';
+import type { IkConfig, SceneConfig } from 'mujoco-react';
 
 export interface RobotEntry {
   label: string;
@@ -6,18 +6,53 @@ export interface RobotEntry {
   camera: { position: [number, number, number]; fov: number };
   orbitTarget: [number, number, number];
   hasIk: boolean;
-  ikConfig?: { siteName: string; numJoints: number };
+  ikConfig?: IkConfig;
   gizmoScale?: number;
+  holdCtrl?: number[];
 }
 
 const XLEROBOT_BASE =
   'https://raw.githubusercontent.com/Vector-Wangel/MuJoCo-GS-Web/main/assets/robots/xlerobot/';
+const MENAGERIE_BASE =
+  'https://raw.githubusercontent.com/google-deepmind/mujoco_menagerie/main/';
 
 export const XLEROBOT_HOME_JOINTS = [
   0, 0,
   1.5708, 1.5785, 1.5777, 0.0008, 1.57, -0.25,
   -1.5708, 1.5785, 1.5777, 0.0008, 1.57, -0.25,
   0, 0,
+];
+
+const SPOT_HOME_QPOS = [
+  0, 0, 0.46, 1, 0, 0, 0,
+  0, 1.04, -1.8,
+  0, 1.04, -1.8,
+  0, 1.04, -1.8,
+  0, 1.04, -1.8,
+];
+
+const SPOT_HOME_CTRL = [
+  0, 1.04, -1.8,
+  0, 1.04, -1.8,
+  0, 1.04, -1.8,
+  0, 1.04, -1.8,
+];
+
+const G1_STAND_QPOS = [
+  0, 0, 0.79, 1, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0,
+  0.2, 0.2, 0, 1.28, 0, 0, 0,
+  0.2, -0.2, 0, 1.28, 0, 0, 0,
+];
+
+const G1_STAND_CTRL = [
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0,
+  0.2, 0.2, 0, 1.28, 0, 0, 0,
+  0.2, -0.2, 0, 1.28, 0, 0, 0,
 ];
 
 export const robots: Record<string, RobotEntry> = {
@@ -218,5 +253,31 @@ export const robots: Record<string, RobotEntry> = {
     camera: { position: [1.5, -1.5, 1.2], fov: 45 },
     orbitTarget: [0.15, 0, 0.4],
     hasIk: false,
+  },
+
+  spot: {
+    label: 'Spot',
+    config: {
+      src: `${MENAGERIE_BASE}boston_dynamics_spot/`,
+      sceneFile: 'scene.xml',
+      homeJoints: SPOT_HOME_QPOS,
+    },
+    camera: { position: [1.8, -1.6, 1.2], fov: 45 },
+    orbitTarget: [0.15, 0.1, 0.38],
+    hasIk: false,
+    holdCtrl: SPOT_HOME_CTRL,
+  },
+
+  g1: {
+    label: 'Unitree G1',
+    config: {
+      src: `${MENAGERIE_BASE}unitree_g1/`,
+      sceneFile: 'scene.xml',
+      homeJoints: G1_STAND_QPOS,
+    },
+    camera: { position: [2.0, -2.4, 1.8], fov: 40 },
+    orbitTarget: [0, 0, 0.85],
+    hasIk: false,
+    holdCtrl: G1_STAND_CTRL,
   },
 };

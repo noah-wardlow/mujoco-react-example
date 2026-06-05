@@ -28,6 +28,18 @@ const HELP: Record<string, string[]> = {
     'R/T F/G — Head pan/tilt',
     'Double-click — Select body',
   ],
+  spot: [
+    'Joint hold controller active',
+    `${MOD}+click — Drag body`,
+    'Double-click — Select body',
+    'Use Debug toggles for sites/joints',
+  ],
+  g1: [
+    'Free-base physics active',
+    `${MOD}+click — Drag body`,
+    'Double-click — Select body',
+    'Use Debug toggles for sites/joints',
+  ],
 };
 
 export function KeyboardHelp({ robotKey }: { robotKey: string }) {

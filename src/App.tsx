@@ -12,6 +12,7 @@ import {
   useSelectionHighlight,
   useMujoco,
   useGravityCompensation,
+  useBeforePhysicsStep,
 } from 'mujoco-react';
 import type { MujocoSimAPI, IkConfig } from 'mujoco-react';
 import { robots } from './configs';
@@ -69,23 +70,36 @@ function ClickSelectOverlay() {
   return null;
 }
 
+function HoldCtrl({ values }: { values?: number[] }) {
+  useBeforePhysicsStep((model, data) => {
+    if (!values) return;
+    for (let i = 0; i < Math.min(values.length, model.nu); i++) {
+      data.ctrl[i] = values[i];
+    }
+  });
+  return null;
+}
+
 /** Scene children that need hooks (useIkController) */
 function SceneChildren({
   robotKey,
   ikConfig,
   showGizmo,
   gizmoScale,
+  holdCtrl,
 }: {
   robotKey: string;
   ikConfig: IkConfig | null;
   showGizmo: boolean;
   gizmoScale?: number;
+  holdCtrl?: number[];
 }) {
   const ik = useIkController(ikConfig);
 
   return (
     <>
       {ik && showGizmo && <IkGizmo controller={ik} scale={gizmoScale} />}
+      <HoldCtrl values={holdCtrl} />
 
       {/* Per-robot controllers — swap in your own */}
       {robotKey === 'franka' && <FrankaController />}
@@ -161,6 +175,7 @@ export function App() {
           ikConfig={ikConfig}
           showGizmo={sim.gizmo}
           gizmoScale={entry.gizmoScale}
+          holdCtrl={entry.holdCtrl}
         />
 
         {/* Opt-in interaction */}
