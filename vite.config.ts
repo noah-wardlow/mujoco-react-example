@@ -7,13 +7,13 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     mujocoReact({
-      models: [
-        'public/models/franka_emika_panda/scene.xml',
-        'public/models/so101/SO101.xml',
-        'public/models/xlerobot/xlerobot.xml',
-        'public/models/boston_dynamics_spot/scene.xml',
-        'public/models/unitree_g1/scene.xml',
-      ],
+      models: {
+        franka: 'public/models/franka_emika_panda/scene.xml',
+        so101: 'public/models/so101/SO101.xml',
+        xlerobot: 'public/models/xlerobot/xlerobot.xml',
+        spot: 'public/models/boston_dynamics_spot/scene.xml',
+        g1: 'public/models/unitree_g1/scene.xml',
+      },
     }),
     tailwindcss(),
     react(),
