@@ -11,10 +11,7 @@ export interface RobotEntry {
   holdCtrl?: number[];
 }
 
-const XLEROBOT_BASE =
-  'https://raw.githubusercontent.com/Vector-Wangel/MuJoCo-GS-Web/main/assets/robots/xlerobot/';
-const MENAGERIE_BASE =
-  'https://raw.githubusercontent.com/google-deepmind/mujoco_menagerie/main/';
+const LOCAL_MODEL_BASE = '/models/';
 
 export const XLEROBOT_HOME_JOINTS = [
   0, 0,
@@ -59,18 +56,9 @@ export const robots: Record<string, RobotEntry> = {
   franka: {
     label: 'Franka Panda',
     config: {
-      src: 'https://raw.githubusercontent.com/google-deepmind/mujoco_menagerie/main/franka_emika_panda/',
+      src: `${LOCAL_MODEL_BASE}franka_emika_panda/`,
       sceneFile: 'scene.xml',
       homeJoints: [1.707, -1.754, 0.003, -2.702, 0.003, 0.951, 2.49],
-      xmlPatches: [
-        {
-          target: 'panda.xml',
-          replace: ['name="actuator8"', 'name="gripper"'],
-          inject:
-            '<site name="tcp" pos="0 0 0.1" size="0.01" rgba="1 0 0 0.5" group="1"/>',
-          injectAfter: '<body name="hand"',
-        },
-      ],
       sceneObjects: [
         {
           name: 'red_cube',
@@ -122,17 +110,9 @@ export const robots: Record<string, RobotEntry> = {
   so101: {
     label: 'SO101',
     config: {
-      src: XLEROBOT_BASE,
+      src: `${LOCAL_MODEL_BASE}so101/`,
       sceneFile: 'SO101.xml',
       homeJoints: [0.0158, 2.052, 2.1307, -0.0845, 1.5857, -0.3745],
-      xmlPatches: [
-        {
-          target: 'SO101.xml',
-          inject:
-            '<site name="tcp" pos="0 -0.04 -0.01" size="0.005" rgba="0 1 0 0.5" group="1"/>',
-          injectAfter: '<body name="Fixed_Jaw"',
-        },
-      ],
       sceneObjects: [
         {
           name: 'floor',
@@ -184,18 +164,11 @@ export const robots: Record<string, RobotEntry> = {
   xlerobot: {
     label: 'XLeRobot',
     config: {
-      src: XLEROBOT_BASE,
+      src: `${LOCAL_MODEL_BASE}xlerobot/`,
       sceneFile: 'xlerobot.xml',
       // 16 actuators: [forward, turn, L_rot, L_pitch, L_elbow, L_wristP, L_wristR, L_jaw,
       //                R_rot, R_pitch, R_elbow, R_wristP, R_wristR, R_jaw, head_pan, head_tilt]
       homeJoints: XLEROBOT_HOME_JOINTS,
-      xmlPatches: [
-        {
-          target: 'xlerobot.xml',
-          // Rotate root chassis by 180deg at startup so robot faces the camera.
-          replace: ['<body name="chassis" pos="0 0 0.38"', '<body name="chassis" pos="0 0 0.38" euler="0 0 3.14159"'],
-        },
-      ],
       sceneObjects: [
         {
           name: 'floor',
@@ -258,7 +231,7 @@ export const robots: Record<string, RobotEntry> = {
   spot: {
     label: 'Spot',
     config: {
-      src: `${MENAGERIE_BASE}boston_dynamics_spot/`,
+      src: `${LOCAL_MODEL_BASE}boston_dynamics_spot/`,
       sceneFile: 'scene.xml',
       homeJoints: SPOT_HOME_QPOS,
     },
@@ -271,7 +244,7 @@ export const robots: Record<string, RobotEntry> = {
   g1: {
     label: 'Unitree G1',
     config: {
-      src: `${MENAGERIE_BASE}unitree_g1/`,
+      src: `${LOCAL_MODEL_BASE}unitree_g1/`,
       sceneFile: 'scene.xml',
       homeJoints: G1_STAND_QPOS,
     },
