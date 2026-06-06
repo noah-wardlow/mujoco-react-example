@@ -112,6 +112,7 @@ function SceneChildren({
 const robotOptions = Object.fromEntries(
   Object.entries(robots).map(([key, r]) => [r.label, key])
 );
+const Z_UP: [number, number, number] = [0, 0, 1];
 
 export function App() {
   const apiRef = useRef<MujocoSimAPI>(null);
@@ -148,7 +149,7 @@ export function App() {
         config={entry.config}
         camera={{
           position: entry.camera.position,
-          up: [0, 0, 1] satisfies [number, number, number],
+          up: Z_UP,
           fov: entry.camera.fov,
           near: 0.01,
           far: 100,

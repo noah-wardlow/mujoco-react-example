@@ -60,7 +60,7 @@ const PITCH_STEP = 0.012;
 const DEFAULT_TIP_LENGTH = 0.108;
 const DEFAULT_GRIPPER_OPEN = 1.5;
 const DEFAULT_GRIPPER_CLOSED = -0.25;
-const INITIAL_EE = [0.162, 0.118] satisfies [number, number];
+const INITIAL_EE: [number, number] = [0.162, 0.118];
 
 /**
  * Generic arm controller hook — configure arms, base, head via a single config.

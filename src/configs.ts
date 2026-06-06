@@ -1,3 +1,4 @@
+import { RobotActuators, RobotJoints, RobotSites } from 'mujoco-react';
 import type { IkConfig, SceneConfig } from 'mujoco-react';
 
 export interface RobotEntry {
@@ -12,6 +13,42 @@ export interface RobotEntry {
 }
 
 const LOCAL_MODEL_BASE = '/models/';
+
+const FRANKA_ARM_JOINTS = [
+  RobotJoints.franka.joint1,
+  RobotJoints.franka.joint2,
+  RobotJoints.franka.joint3,
+  RobotJoints.franka.joint4,
+  RobotJoints.franka.joint5,
+  RobotJoints.franka.joint6,
+  RobotJoints.franka.joint7,
+];
+
+const FRANKA_ARM_ACTUATORS = [
+  RobotActuators.franka.actuator1,
+  RobotActuators.franka.actuator2,
+  RobotActuators.franka.actuator3,
+  RobotActuators.franka.actuator4,
+  RobotActuators.franka.actuator5,
+  RobotActuators.franka.actuator6,
+  RobotActuators.franka.actuator7,
+];
+
+const SO101_ARM_JOINTS = [
+  RobotJoints.so101.Rotation,
+  RobotJoints.so101.Pitch,
+  RobotJoints.so101.Elbow,
+  RobotJoints.so101.Wrist_Pitch,
+  RobotJoints.so101.Wrist_Roll,
+];
+
+const SO101_ARM_ACTUATORS = [
+  RobotActuators.so101.Rotation,
+  RobotActuators.so101.Pitch,
+  RobotActuators.so101.Elbow,
+  RobotActuators.so101.Wrist_Pitch,
+  RobotActuators.so101.Wrist_Roll,
+];
 
 export const XLEROBOT_HOME_JOINTS = [
   0, 0,
@@ -104,7 +141,11 @@ export const robots: Record<string, RobotEntry> = {
     camera: { position: [2, -1.5, 2.5], fov: 45 },
     orbitTarget: [0, 0, 0.4],
     hasIk: true,
-    ikConfig: { siteName: 'tcp', numJoints: 7 },
+    ikConfig: {
+      siteName: RobotSites.franka.tcp,
+      joints: FRANKA_ARM_JOINTS,
+      actuators: FRANKA_ARM_ACTUATORS,
+    },
   },
 
   so101: {
@@ -157,7 +198,11 @@ export const robots: Record<string, RobotEntry> = {
     camera: { position: [1.2, -1.2, 1.6], fov: 45 },
     orbitTarget: [0.35, -0.3, 0.8],
     hasIk: true,
-    ikConfig: { siteName: 'tcp', numJoints: 5 },
+    ikConfig: {
+      siteName: RobotSites.so101.tcp,
+      joints: SO101_ARM_JOINTS,
+      actuators: SO101_ARM_ACTUATORS,
+    },
     gizmoScale: 0.08,
   },
 
