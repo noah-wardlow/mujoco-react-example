@@ -29,12 +29,14 @@ The app demonstrates the **composable children** pattern — each feature is an 
     <OrbitControls />
     <SceneRenderer />
 
-    {/* Opt-in IK controller plugin — wraps IkGizmo */}
-    {entry.hasIk && sim.gizmo && (
-      <IkController config={{ siteName: entry.config.tcpSiteName!, numJoints: entry.config.numArmJoints! }}>
-        <IkGizmo scale={entry.gizmoScale} />
-      </IkController>
-    )}
+    {/* Opt-in IK controller plugin */}
+    <SceneChildren
+      robotKey={robotKey}
+      ikConfig={entry.hasIk ? entry.ikConfig : null}
+      showGizmo={sim.gizmo}
+      gizmoScale={entry.gizmoScale}
+      holdCtrl={entry.holdCtrl}
+    />
     <DragInteraction />
     <ClickSelectOverlay />
 
@@ -64,17 +66,17 @@ Controllers are thin wrappers around library hooks. Each robot's controller is a
 The simplest possible controller — one `useKeyboardTeleop` call:
 
 ```tsx
-import { useKeyboardTeleop } from 'mujoco-react';
+import { RobotActuators, useKeyboardTeleop } from 'mujoco-react';
 
 export function FrankaController() {
   useKeyboardTeleop({
-    bindings: { v: { actuator: 'gripper', toggle: [0, 255] } },
+    bindings: { v: { actuator: RobotActuators.franka.gripper, toggle: [0, 255] } },
   });
   return null;
 }
 ```
 
-Arm positioning comes from `<IkGizmo />` inside `<IkController>` — the controller only adds the gripper toggle.
+Arm positioning comes from `<IkGizmo />` via `useIkController(ikConfig)` — the controller only adds the gripper toggle.
 
 ### SO101Controller / XLeRobotController
 
