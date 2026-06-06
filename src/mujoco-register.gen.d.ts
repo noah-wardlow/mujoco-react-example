@@ -2,6 +2,7 @@
 // Regenerate by running Vite with the mujocoReact() plugin or `mujoco-react codegen`.
 
 import 'mujoco-react';
+import type { RobotResource } from 'mujoco-react';
 
 declare module 'mujoco-react' {
   interface Register {
@@ -60,4 +61,61 @@ declare module 'mujoco-react' {
     geoms: 'back_caster' | 'FL' | 'floor' | 'FR' | 'front_caster' | 'HL' | 'HR';
     keyframes: 'home' | 'stand';
   }
+
+  export namespace RobotActuators {
+    export type franka = RobotResource<'franka', 'actuators'>;
+    export type so101 = RobotResource<'so101', 'actuators'>;
+    export type xlerobot = RobotResource<'xlerobot', 'actuators'>;
+    export type spot = RobotResource<'spot', 'actuators'>;
+    export type g1 = RobotResource<'g1', 'actuators'>;
+  }
+
+  export namespace RobotSensors {
+    export type franka = RobotResource<'franka', 'sensors'>;
+    export type so101 = RobotResource<'so101', 'sensors'>;
+    export type xlerobot = RobotResource<'xlerobot', 'sensors'>;
+    export type spot = RobotResource<'spot', 'sensors'>;
+    export type g1 = RobotResource<'g1', 'sensors'>;
+  }
+
+  export namespace RobotBodies {
+    export type franka = RobotResource<'franka', 'bodies'>;
+    export type so101 = RobotResource<'so101', 'bodies'>;
+    export type xlerobot = RobotResource<'xlerobot', 'bodies'>;
+    export type spot = RobotResource<'spot', 'bodies'>;
+    export type g1 = RobotResource<'g1', 'bodies'>;
+  }
+
+  export namespace RobotJoints {
+    export type franka = RobotResource<'franka', 'joints'>;
+    export type so101 = RobotResource<'so101', 'joints'>;
+    export type xlerobot = RobotResource<'xlerobot', 'joints'>;
+    export type spot = RobotResource<'spot', 'joints'>;
+    export type g1 = RobotResource<'g1', 'joints'>;
+  }
+
+  export namespace RobotSites {
+    export type franka = RobotResource<'franka', 'sites'>;
+    export type so101 = RobotResource<'so101', 'sites'>;
+    export type xlerobot = RobotResource<'xlerobot', 'sites'>;
+    export type spot = RobotResource<'spot', 'sites'>;
+    export type g1 = RobotResource<'g1', 'sites'>;
+  }
+
+  export namespace RobotGeoms {
+    export type franka = RobotResource<'franka', 'geoms'>;
+    export type so101 = RobotResource<'so101', 'geoms'>;
+    export type xlerobot = RobotResource<'xlerobot', 'geoms'>;
+    export type spot = RobotResource<'spot', 'geoms'>;
+    export type g1 = RobotResource<'g1', 'geoms'>;
+  }
+
+  export namespace RobotKeyframes {
+    export type franka = RobotResource<'franka', 'keyframes'>;
+    export type so101 = RobotResource<'so101', 'keyframes'>;
+    export type xlerobot = RobotResource<'xlerobot', 'keyframes'>;
+    export type spot = RobotResource<'spot', 'keyframes'>;
+    export type g1 = RobotResource<'g1', 'keyframes'>;
+  }
+
 }
