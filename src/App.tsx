@@ -86,7 +86,7 @@ function ClickSelectOverlay() {
 }
 
 function HoldCtrl({ values }: { values?: number[] }) {
-  useBeforePhysicsStep((model, data) => {
+  useBeforePhysicsStep(({ model, data }) => {
     if (!values) return;
     for (let i = 0; i < Math.min(values.length, model.nu); i++) {
       data.ctrl[i] = values[i];

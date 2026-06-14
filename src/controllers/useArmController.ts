@@ -122,7 +122,7 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
     };
   }, []);
 
-  useBeforePhysicsStep((_model, data) => {
+  useBeforePhysicsStep(({ data }) => {
     const k = keys.current;
 
     // === Base ===
