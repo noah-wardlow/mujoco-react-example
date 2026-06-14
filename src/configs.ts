@@ -1,4 +1,4 @@
-import { RobotActuators, RobotJoints, RobotSites } from 'mujoco-react';
+import { RobotActuators, RobotJoints, RobotSites, withSplatEnvironment } from 'mujoco-react';
 import type { IkConfig, PairedSplatEnvironmentConfig, SceneConfig } from 'mujoco-react';
 
 export interface RobotEntry {
@@ -89,6 +89,26 @@ const G1_STAND_CTRL = [
   0.2, 0.2, 0, 1.28, 0, 0, 0,
   0.2, -0.2, 0, 1.28, 0, 0, 0,
 ];
+
+const XLEROBOT_KITCHEN_SPLAT: PairedSplatEnvironmentConfig = {
+  id: 'xlerobot-kitchen-splat',
+  label: 'XLeRobot kitchen 3DGS',
+  description:
+    'MuJoCo-GS-Web tabletop/kitchen Gaussian splat paired with MJCF collision proxy geometry.',
+  splat: {
+    src: '/models/xlerobot/splats/tabletop/scene.spz',
+    format: 'spz',
+    renderer: 'spark',
+  },
+  collisionProxy: {
+    xmlPath: '/models/xlerobot/splats/tabletop/scene.xml',
+    status: 'validated',
+    primitives: ['plane', 'box'],
+    notes: [
+      'The splat is visual-only; use the paired MJCF XML for contacts.',
+    ],
+  },
+};
 
 export const robots: Record<string, RobotEntry> = {
   franka: {
@@ -209,20 +229,13 @@ export const robots: Record<string, RobotEntry> = {
 
   xlerobot: {
     label: 'XLeRobot Kitchen',
-    config: {
+    config: withSplatEnvironment({
       src: `${LOCAL_MODEL_BASE}xlerobot/`,
       sceneFile: 'xlerobot.xml',
       // 16 actuators: [forward, turn, L_rot, L_pitch, L_elbow, L_wristP, L_wristR, L_jaw,
       //                R_rot, R_pitch, R_elbow, R_wristP, R_wristR, R_jaw, head_pan, head_tilt]
       homeJoints: XLEROBOT_HOME_JOINTS,
       sceneObjects: [
-        {
-          name: 'floor',
-          type: 'box',
-          size: [5, 5, 0.005],
-          position: [0, 0, -0.005],
-          rgba: [0.15, 0.15, 0.2, 1],
-        },
         {
           name: 'red_cube',
           type: 'box',
@@ -267,102 +280,12 @@ export const robots: Record<string, RobotEntry> = {
           friction: '2 0.3 0.1',
           condim: 4,
         },
-        {
-          name: 'kitchen_table_right_proxy',
-          type: 'box',
-          size: [0.35, 0.88, 0.41],
-          position: [1.35, 0.02, 0.41],
-          rgba: [0.6, 0.4, 0.2, 0.01],
-          mass: 0.1,
-          friction: '1.0 0.05 0.01',
-          solref: '0.002 1.0',
-          solimp: '0.95 0.99 0.001',
-          condim: 4,
-        },
-        {
-          name: 'kitchen_table_center_proxy',
-          type: 'box',
-          size: [1, 0.28, 0.41],
-          position: [0, -0.58, 0.41],
-          rgba: [0.6, 0.4, 0.2, 0.01],
-          mass: 0.1,
-          friction: '1.0 0.05 0.01',
-          solref: '0.002 1.0',
-          solimp: '0.95 0.99 0.001',
-          condim: 4,
-        },
-        {
-          name: 'kitchen_table_left_proxy',
-          type: 'box',
-          size: [0.35, 0.88, 0.41],
-          position: [-1.35, 0.02, 0.41],
-          rgba: [0.6, 0.4, 0.2, 0.01],
-          mass: 0.1,
-          friction: '1.0 0.05 0.01',
-          solref: '0.002 1.0',
-          solimp: '0.95 0.99 0.001',
-          condim: 4,
-        },
-        {
-          name: 'kitchen_wall_right_proxy',
-          type: 'box',
-          size: [0.1, 1, 1.2],
-          position: [1.8, 0.1, 1.2],
-          rgba: [0.5, 0.5, 0.5, 0.01],
-          mass: 0.1,
-          friction: '1.0 0.05 0.01',
-          solref: '0.002 1.0',
-          solimp: '0.95 0.99 0.001',
-          condim: 4,
-        },
-        {
-          name: 'kitchen_wall_back_proxy',
-          type: 'box',
-          size: [1.7, 0.1, 1.2],
-          position: [0, -0.96, 1.2],
-          rgba: [0.5, 0.5, 0.5, 0.01],
-          mass: 0.1,
-          friction: '1.0 0.05 0.01',
-          solref: '0.002 1.0',
-          solimp: '0.95 0.99 0.001',
-          condim: 4,
-        },
-        {
-          name: 'kitchen_wall_left_proxy',
-          type: 'box',
-          size: [0.1, 1, 1.2],
-          position: [-1.8, 0.1, 1.2],
-          rgba: [0.5, 0.5, 0.5, 0.01],
-          mass: 0.1,
-          friction: '1.0 0.05 0.01',
-          solref: '0.002 1.0',
-          solimp: '0.95 0.99 0.001',
-          condim: 4,
-        },
       ],
-    },
-    camera: { position: [1.5, -1.5, 1.2], fov: 45 },
-    orbitTarget: [0.15, 0, 0.4],
+    }, XLEROBOT_KITCHEN_SPLAT),
+    camera: { position: [0.5, 3, 1.7], fov: 45 },
+    orbitTarget: [0, 0, 0.7],
     hasIk: false,
-    splatEnvironment: {
-      id: 'xlerobot-kitchen-splat',
-      label: 'XLeRobot kitchen 3DGS',
-      description:
-        'MuJoCo-GS-Web tabletop/kitchen Gaussian splat paired with MJCF collision proxy geometry.',
-      splat: {
-        src: '/models/xlerobot/splats/tabletop/scene.spz',
-        format: 'spz',
-        renderer: 'spark',
-      },
-      collisionProxy: {
-        xmlPath: '/models/xlerobot/splats/tabletop/scene.xml',
-        status: 'validated',
-        primitives: ['plane', 'box'],
-        notes: [
-          'The splat is visual-only; use the paired MJCF XML for contacts.',
-        ],
-      },
-    },
+    splatEnvironment: XLEROBOT_KITCHEN_SPLAT,
   },
 
   spot: {

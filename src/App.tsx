@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { OrbitControls, Html, Stats, Environment } from '@react-three/drei';
 import { useControls, button } from 'leva';
 import {
@@ -24,36 +24,50 @@ import { useClickSelect } from './useClickSelect';
 import { KeyboardHelp } from './KeyboardHelp';
 import { GitHubLink } from './GitHubLink';
 
-function LoadingOverlay() {
-  const sim = useMujoco();
-  if (sim.isReady) return null;
+function LoadingPanel({ error }: { error?: string }) {
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 12,
+      color: error ? '#f87171' : '#94a3b8',
+      fontFamily: 'system-ui, sans-serif',
+    }}>
+      {error ? (
+        <span style={{ fontSize: 14 }}>{error}</span>
+      ) : (
+        <>
+          <div style={{
+            width: 32,
+            height: 32,
+            border: '3px solid #334155',
+            borderTop: '3px solid #38bdf8',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite',
+          }} />
+          <span style={{ fontSize: 14 }}>Loading model...</span>
+          <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+        </>
+      )}
+    </div>
+  );
+}
+
+function CanvasLoadingOverlay() {
   return (
     <Html center>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 12,
-        color: sim.isError ? '#f87171' : '#94a3b8',
-        fontFamily: 'system-ui, sans-serif',
-      }}>
-        {sim.isError ? (
-          <span style={{ fontSize: 14 }}>{sim.error}</span>
-        ) : (
-          <>
-            <div style={{
-              width: 32,
-              height: 32,
-              border: '3px solid #334155',
-              borderTop: '3px solid #38bdf8',
-              borderRadius: '50%',
-              animation: 'spin 0.8s linear infinite',
-            }} />
-            <span style={{ fontSize: 14 }}>Loading model...</span>
-            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-          </>
-        )}
-      </div>
+      <LoadingPanel />
+    </Html>
+  );
+}
+
+function LoadingOverlay({ settling }: { settling: boolean }) {
+  const sim = useMujoco();
+  if (sim.isReady && !settling) return null;
+  return (
+    <Html center>
+      <LoadingPanel error={sim.isError ? sim.error : undefined} />
     </Html>
   );
 }
@@ -117,6 +131,8 @@ const Z_UP: [number, number, number] = [0, 0, 1];
 
 export function App() {
   const apiRef = useRef<MujocoSimAPI>(null);
+  const readyGenerationRef = useRef(0);
+  const [sceneSettling, setSceneSettling] = useState(true);
 
   const { robot: robotKey } = useControls({
     robot: { value: 'franka', options: robotOptions, label: 'Robot' },
@@ -141,6 +157,23 @@ export function App() {
   const canvasKey = useMemo(() => robotKey, [robotKey]);
 
   const ikConfig = entry.hasIk && entry.ikConfig ? entry.ikConfig : null;
+  const hasSplatEnvironment = Boolean(entry.splatEnvironment);
+
+  useEffect(() => {
+    readyGenerationRef.current += 1;
+    setSceneSettling(true);
+  }, [robotKey]);
+
+  const handleReady = useCallback(() => {
+    const generation = readyGenerationRef.current;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (readyGenerationRef.current === generation) {
+          setSceneSettling(false);
+        }
+      });
+    });
+  }, []);
 
   return (
     <MujocoProvider>
@@ -148,6 +181,8 @@ export function App() {
         key={canvasKey}
         ref={apiRef}
         config={entry.config}
+        loadingFallback={<CanvasLoadingOverlay />}
+        onReady={handleReady}
         camera={{
           position: entry.camera.position,
           up: Z_UP,
@@ -157,6 +192,7 @@ export function App() {
         }}
         paused={sim.paused}
         speed={sim.speed}
+        dpr={hasSplatEnvironment ? 1 : [1, 2]}
         shadows
         style={{ width: '100%', height: '100%' }}
       >
@@ -168,7 +204,7 @@ export function App() {
         />
 
         {/* Core scene */}
-        <LoadingOverlay />
+        <LoadingOverlay settling={sceneSettling} />
         <GravityCompensation enabled={sim.gravityCompensation} />
 
         {/* IK + per-robot controllers */}
@@ -182,6 +218,7 @@ export function App() {
         {entry.splatEnvironment ? (
           <SparkSplatEnvironment
             environment={entry.splatEnvironment}
+            rotation={[Math.PI / 2, 0, 0]}
             hideGroundMeshes
           />
         ) : null}
@@ -201,11 +238,13 @@ export function App() {
         <ambientLight intensity={0.4} />
         <directionalLight position={[2, -2, 5]} intensity={1.5} castShadow />
         <directionalLight position={[-1, 1, 3]} intensity={0.3} />
-        <gridHelper
-          args={[4, 40, '#64748b', '#94a3b8']}
-          rotation={[Math.PI / 2, 0, 0]}
-          position={[0, 0, 0.001]}
-        />
+        {entry.splatEnvironment ? null : (
+          <gridHelper
+            args={[4, 40, '#64748b', '#94a3b8']}
+            rotation={[Math.PI / 2, 0, 0]}
+            position={[0, 0, 0.001]}
+          />
+        )}
         <Stats />
       </MujocoCanvas>
 
