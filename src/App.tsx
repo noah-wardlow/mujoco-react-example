@@ -19,6 +19,7 @@ import {
 import { SparkSplatEnvironment } from 'mujoco-react/spark';
 import type {
   MujocoSimAPI,
+  CameraFrameCaptureOptions,
   IkConfig,
   ScenarioLightingPreset,
   VisualScenarioConfig,
@@ -142,6 +143,10 @@ const sceneAuthoringOptions = {
   'Low light': 'low-light',
   Splat: 'splat',
 } satisfies Record<string, ScenarioLightingPreset>;
+const cameraFrameOptions = {
+  Orbit: 'orbit',
+  'Top down': 'top-down',
+} satisfies Record<string, string>;
 const sceneAuthoringPresetValues = [
   'studio',
   'warehouse',
@@ -166,6 +171,10 @@ function downloadBlob(blob: Blob, filename: string) {
   URL.revokeObjectURL(url);
 }
 
+function vec3(x: number, y: number, z: number): [number, number, number] {
+  return [x, y, z];
+}
+
 export function App() {
   const apiRef = useRef<MujocoSimAPI>(null);
   const captureMetadataRef = useRef({
@@ -176,6 +185,13 @@ export function App() {
   const readyGenerationRef = useRef(0);
   const [sceneSettling, setSceneSettling] = useState(true);
   const [captureLabel, setCaptureLabel] = useState('idle');
+  const selectedCameraFrameRef = useRef<{
+    label: string;
+    options: CameraFrameCaptureOptions;
+  }>({
+    label: 'orbit',
+    options: { type: 'image/png' },
+  });
 
   const { robot: robotKey } = useControls({
     robot: { value: 'franka', options: robotOptions, label: 'Robot' },
@@ -216,18 +232,48 @@ export function App() {
     seed: sceneAuthoring.seed,
   };
 
-  useControls('Capture', {
+  const cameraFrameConfigs = useMemo<Record<string, CameraFrameCaptureOptions>>(() => {
+    const [tx, ty, tz] = entry.orbitTarget;
+    return {
+      orbit: {
+        width: 1280,
+        height: 900,
+        position: entry.camera.position,
+        lookAt: entry.orbitTarget,
+        up: Z_UP,
+        fov: entry.camera.fov,
+        type: 'image/png',
+      },
+      'top-down': {
+        width: 1024,
+        height: 1024,
+        position: vec3(tx, ty, tz + 2.2),
+        lookAt: entry.orbitTarget,
+        up: vec3(0, 1, 0),
+        fov: 45,
+        type: 'image/png',
+      },
+    } satisfies Record<string, CameraFrameCaptureOptions>;
+  }, [entry.camera.fov, entry.camera.position, entry.orbitTarget]);
+
+  const capture = useControls('Capture', {
+    camera: {
+      value: 'orbit',
+      options: cameraFrameOptions,
+      label: 'camera',
+    },
     'save png': button(async () => {
       try {
-        setCaptureLabel('capturing blob');
+        setCaptureLabel('capturing camera');
         const metadata = captureMetadataRef.current;
-        const frame = await apiRef.current?.captureFrameBlob({
-          type: 'image/png',
-        });
-        if (!frame) throw new Error('MuJoCo canvas is not ready.');
+        const cameraFrame = selectedCameraFrameRef.current;
+        const frame = await apiRef.current?.captureCameraFrameBlob(
+          cameraFrame.options
+        );
+        if (!frame) throw new Error('MuJoCo scene is not ready.');
         downloadBlob(
           frame.blob,
-          `${metadata.robotKey}-${metadata.preset}-seed-${metadata.seed}.png`
+          `${metadata.robotKey}-${cameraFrame.label}-${metadata.preset}-seed-${metadata.seed}.png`
         );
         setCaptureLabel('png saved');
       } catch (error) {
@@ -239,6 +285,12 @@ export function App() {
       editable: false,
     },
   });
+  const selectedCameraFrame =
+    cameraFrameConfigs[capture.camera] ?? cameraFrameConfigs.orbit;
+  selectedCameraFrameRef.current = {
+    label: capture.camera,
+    options: selectedCameraFrame,
+  };
   const canvasKey = useMemo(() => robotKey, [robotKey]);
 
   const ikConfig = entry.hasIk && entry.ikConfig ? entry.ikConfig : null;
