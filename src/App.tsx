@@ -14,6 +14,7 @@ import {
   useGravityCompensation,
   useBeforePhysicsStep,
 } from 'mujoco-react';
+import { SparkSplatEnvironment } from 'mujoco-react/spark';
 import type { MujocoSimAPI, IkConfig } from 'mujoco-react';
 import { robots } from './configs';
 import { FrankaController } from './controllers/FrankaController';
@@ -178,6 +179,12 @@ export function App() {
           gizmoScale={entry.gizmoScale}
           holdCtrl={entry.holdCtrl}
         />
+        {entry.splatEnvironment ? (
+          <SparkSplatEnvironment
+            environment={entry.splatEnvironment}
+            hideGroundMeshes
+          />
+        ) : null}
 
         {/* Opt-in interaction */}
         <DragInteraction />
@@ -188,7 +195,9 @@ export function App() {
         <Debug showSites={debug.sites} showJoints={debug.joints} />
 
         {/* Scene decoration — lights, environment, grid */}
-        <Environment preset="lobby" background backgroundBlurriness={1} backgroundIntensity={0.6} environmentIntensity={0.5} />
+        {entry.splatEnvironment ? null : (
+          <Environment preset="lobby" background backgroundBlurriness={1} backgroundIntensity={0.6} environmentIntensity={0.5} />
+        )}
         <ambientLight intensity={0.4} />
         <directionalLight position={[2, -2, 5]} intensity={1.5} castShadow />
         <directionalLight position={[-1, 1, 3]} intensity={0.3} />
