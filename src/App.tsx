@@ -243,6 +243,7 @@ export function App() {
 
   const ikConfig = entry.hasIk && entry.ikConfig ? entry.ikConfig : null;
   const hasSplatEnvironment = Boolean(entry.splatEnvironment);
+  const applySceneAuthoring = sceneAuthoring.enabled;
   const visualScenario: VisualScenarioConfig = useMemo(
     () => ({
       id: `${robotKey}-${sceneAuthoring.preset}`,
@@ -317,12 +318,13 @@ export function App() {
         <GravityCompensation enabled={sim.gravityCompensation} />
         <VisualScenarioEffects
           scenario={visualScenario}
-          enabled={sceneAuthoring.enabled && !hasSplatEnvironment}
-          applyBackground={sceneAuthoring.fog}
-          applyFog={sceneAuthoring.fog}
+          enabled={applySceneAuthoring}
+          applyBackground={sceneAuthoring.fog && !hasSplatEnvironment}
+          applyFog={sceneAuthoring.fog && !hasSplatEnvironment}
           applyMaterials={sceneAuthoring.materials}
           materialFilter={({ object }) => (
             object.name.includes('cube') ||
+            object.name.includes('sphere') ||
             object.name.includes('table') ||
             object.name.includes('floor')
           )}
@@ -356,7 +358,7 @@ export function App() {
         {entry.splatEnvironment ? null : (
           <Environment preset="lobby" background backgroundBlurriness={1} backgroundIntensity={0.6} environmentIntensity={0.5} />
         )}
-        {sceneAuthoring.enabled && !hasSplatEnvironment ? (
+        {applySceneAuthoring ? (
           <ScenarioLighting preset={sceneAuthoringPreset} intensity={1} />
         ) : (
           <>
