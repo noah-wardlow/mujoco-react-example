@@ -15,7 +15,6 @@ import {
   useMujoco,
   useGravityCompensation,
   useBeforePhysicsStep,
-  useFrameCapture,
 } from 'mujoco-react';
 import { SparkSplatEnvironment } from 'mujoco-react/spark';
 import type {
@@ -177,7 +176,6 @@ export function App() {
   const readyGenerationRef = useRef(0);
   const [sceneSettling, setSceneSettling] = useState(true);
   const [captureLabel, setCaptureLabel] = useState('idle');
-  const frameCapture = useFrameCapture();
 
   const { robot: robotKey } = useControls({
     robot: { value: 'franka', options: robotOptions, label: 'Robot' },
@@ -209,7 +207,7 @@ export function App() {
     seed: { value: 17, min: 0, max: 999, step: 1 },
     exposure: { value: 1.15, min: 0.35, max: 1.8, step: 0.05 },
     materials: { value: true, label: 'seeded materials' },
-    fog: { value: true, label: 'fog/background' },
+    fog: { value: false, label: 'fog/background' },
   });
   const sceneAuthoringPreset = toSceneAuthoringPreset(sceneAuthoring.preset);
   captureMetadataRef.current = {
@@ -219,37 +217,7 @@ export function App() {
   };
 
   useControls('Capture', {
-    'hook png': button(async () => {
-      try {
-        setCaptureLabel('capturing with hook');
-        const metadata = captureMetadataRef.current;
-        const frame = await frameCapture.captureBlob({
-          target: apiRef.current?.getCanvas(),
-          type: 'image/png',
-        });
-        downloadBlob(
-          frame.blob,
-          `${metadata.robotKey}-${metadata.preset}-seed-${metadata.seed}-hook.png`
-        );
-        setCaptureLabel('hook png saved');
-      } catch (error) {
-        setCaptureLabel(error instanceof Error ? error.message : 'capture failed');
-      }
-    }),
-    'api data url': button(async () => {
-      try {
-        setCaptureLabel('capturing data url');
-        const frame = await apiRef.current?.captureFrame({
-          type: 'image/png',
-        });
-        if (!frame) throw new Error('MuJoCo canvas is not ready.');
-        await navigator.clipboard?.writeText(frame.dataUrl);
-        setCaptureLabel('data url copied');
-      } catch (error) {
-        setCaptureLabel(error instanceof Error ? error.message : 'capture failed');
-      }
-    }),
-    'api blob png': button(async () => {
+    'save png': button(async () => {
       try {
         setCaptureLabel('capturing blob');
         const metadata = captureMetadataRef.current;
@@ -259,15 +227,15 @@ export function App() {
         if (!frame) throw new Error('MuJoCo canvas is not ready.');
         downloadBlob(
           frame.blob,
-          `${metadata.robotKey}-${metadata.preset}-seed-${metadata.seed}-blob.png`
+          `${metadata.robotKey}-${metadata.preset}-seed-${metadata.seed}.png`
         );
-        setCaptureLabel('blob png saved');
+        setCaptureLabel('png saved');
       } catch (error) {
         setCaptureLabel(error instanceof Error ? error.message : 'capture failed');
       }
     }),
     status: {
-      value: frameCapture.isCapturing ? 'capturing' : captureLabel,
+      value: captureLabel,
       editable: false,
     },
   });
@@ -350,6 +318,7 @@ export function App() {
         <VisualScenarioEffects
           scenario={visualScenario}
           enabled={sceneAuthoring.enabled && !hasSplatEnvironment}
+          applyBackground={sceneAuthoring.fog}
           applyFog={sceneAuthoring.fog}
           applyMaterials={sceneAuthoring.materials}
           materialFilter={({ object }) => (
