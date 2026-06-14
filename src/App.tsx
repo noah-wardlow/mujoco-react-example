@@ -4,6 +4,8 @@ import { useControls, button } from 'leva';
 import {
   MujocoProvider,
   MujocoCanvas,
+  ScenarioLighting,
+  VisualScenarioEffects,
   useIkController,
   IkGizmo,
   DragInteraction,
@@ -13,9 +15,15 @@ import {
   useMujoco,
   useGravityCompensation,
   useBeforePhysicsStep,
+  useFrameCapture,
 } from 'mujoco-react';
 import { SparkSplatEnvironment } from 'mujoco-react/spark';
-import type { MujocoSimAPI, IkConfig } from 'mujoco-react';
+import type {
+  MujocoSimAPI,
+  IkConfig,
+  ScenarioLightingPreset,
+  VisualScenarioConfig,
+} from 'mujoco-react';
 import { robots } from './configs';
 import { FrankaController } from './controllers/FrankaController';
 import { SO101Controller } from './controllers/SO101Controller';
@@ -129,10 +137,47 @@ const robotOptions = Object.fromEntries(
 );
 const Z_UP: [number, number, number] = [0, 0, 1];
 
+const sceneAuthoringOptions = {
+  Studio: 'studio',
+  Warehouse: 'warehouse',
+  'Low light': 'low-light',
+  Splat: 'splat',
+} satisfies Record<string, ScenarioLightingPreset>;
+const sceneAuthoringPresetValues = [
+  'studio',
+  'warehouse',
+  'low-light',
+  'splat',
+] satisfies readonly ScenarioLightingPreset[];
+const defaultSceneAuthoringPreset = 'warehouse' satisfies ScenarioLightingPreset;
+
+function toSceneAuthoringPreset(value: string): ScenarioLightingPreset {
+  return (
+    sceneAuthoringPresetValues.find((preset) => preset === value) ??
+    defaultSceneAuthoringPreset
+  );
+}
+
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 export function App() {
   const apiRef = useRef<MujocoSimAPI>(null);
+  const captureMetadataRef = useRef({
+    robotKey: 'franka',
+    preset: defaultSceneAuthoringPreset,
+    seed: 17,
+  });
   const readyGenerationRef = useRef(0);
   const [sceneSettling, setSceneSettling] = useState(true);
+  const [captureLabel, setCaptureLabel] = useState('idle');
+  const frameCapture = useFrameCapture();
 
   const { robot: robotKey } = useControls({
     robot: { value: 'franka', options: robotOptions, label: 'Robot' },
@@ -154,10 +199,105 @@ export function App() {
     joints: false,
   });
 
+  const sceneAuthoring = useControls('Scene Authoring', {
+    enabled: { value: true, label: 'enabled' },
+    preset: {
+      value: defaultSceneAuthoringPreset,
+      options: sceneAuthoringOptions,
+      label: 'lighting',
+    },
+    seed: { value: 17, min: 0, max: 999, step: 1 },
+    exposure: { value: 1.15, min: 0.35, max: 1.8, step: 0.05 },
+    materials: { value: true, label: 'seeded materials' },
+    fog: { value: true, label: 'fog/background' },
+  });
+  const sceneAuthoringPreset = toSceneAuthoringPreset(sceneAuthoring.preset);
+  captureMetadataRef.current = {
+    robotKey,
+    preset: sceneAuthoringPreset,
+    seed: sceneAuthoring.seed,
+  };
+
+  useControls('Capture', {
+    'hook png': button(async () => {
+      try {
+        setCaptureLabel('capturing with hook');
+        const metadata = captureMetadataRef.current;
+        const frame = await frameCapture.captureBlob({
+          target: apiRef.current?.getCanvas(),
+          type: 'image/png',
+        });
+        downloadBlob(
+          frame.blob,
+          `${metadata.robotKey}-${metadata.preset}-seed-${metadata.seed}-hook.png`
+        );
+        setCaptureLabel('hook png saved');
+      } catch (error) {
+        setCaptureLabel(error instanceof Error ? error.message : 'capture failed');
+      }
+    }),
+    'api data url': button(async () => {
+      try {
+        setCaptureLabel('capturing data url');
+        const frame = await apiRef.current?.captureFrame({
+          type: 'image/png',
+        });
+        if (!frame) throw new Error('MuJoCo canvas is not ready.');
+        await navigator.clipboard?.writeText(frame.dataUrl);
+        setCaptureLabel('data url copied');
+      } catch (error) {
+        setCaptureLabel(error instanceof Error ? error.message : 'capture failed');
+      }
+    }),
+    'api blob png': button(async () => {
+      try {
+        setCaptureLabel('capturing blob');
+        const metadata = captureMetadataRef.current;
+        const frame = await apiRef.current?.captureFrameBlob({
+          type: 'image/png',
+        });
+        if (!frame) throw new Error('MuJoCo canvas is not ready.');
+        downloadBlob(
+          frame.blob,
+          `${metadata.robotKey}-${metadata.preset}-seed-${metadata.seed}-blob.png`
+        );
+        setCaptureLabel('blob png saved');
+      } catch (error) {
+        setCaptureLabel(error instanceof Error ? error.message : 'capture failed');
+      }
+    }),
+    status: {
+      value: frameCapture.isCapturing ? 'capturing' : captureLabel,
+      editable: false,
+    },
+  });
   const canvasKey = useMemo(() => robotKey, [robotKey]);
 
   const ikConfig = entry.hasIk && entry.ikConfig ? entry.ikConfig : null;
   const hasSplatEnvironment = Boolean(entry.splatEnvironment);
+  const visualScenario: VisualScenarioConfig = useMemo(
+    () => ({
+      id: `${robotKey}-${sceneAuthoring.preset}`,
+      label: `${entry.label} ${sceneAuthoringPreset}`,
+      seed: sceneAuthoring.seed,
+      lighting: sceneAuthoringPreset,
+      camera: {
+        exposure: sceneAuthoring.exposure,
+      },
+      materials: {
+        randomizeObjectColors: sceneAuthoring.materials,
+        randomizeTableMaterial: sceneAuthoring.materials,
+      },
+    }),
+    [
+      entry.label,
+      robotKey,
+      sceneAuthoring.exposure,
+      sceneAuthoring.materials,
+      sceneAuthoringPreset,
+      sceneAuthoring.seed,
+    ]
+  );
 
   useEffect(() => {
     readyGenerationRef.current += 1;
@@ -193,6 +333,7 @@ export function App() {
         paused={sim.paused}
         speed={sim.speed}
         dpr={hasSplatEnvironment ? 1 : [1, 2]}
+        gl={{ preserveDrawingBuffer: true }}
         shadows
         style={{ width: '100%', height: '100%' }}
       >
@@ -206,6 +347,17 @@ export function App() {
         {/* Core scene */}
         <LoadingOverlay settling={sceneSettling} />
         <GravityCompensation enabled={sim.gravityCompensation} />
+        <VisualScenarioEffects
+          scenario={visualScenario}
+          enabled={sceneAuthoring.enabled && !hasSplatEnvironment}
+          applyFog={sceneAuthoring.fog}
+          applyMaterials={sceneAuthoring.materials}
+          materialFilter={({ object }) => (
+            object.name.includes('cube') ||
+            object.name.includes('table') ||
+            object.name.includes('floor')
+          )}
+        />
 
         {/* IK + per-robot controllers */}
         <SceneChildren
@@ -235,9 +387,15 @@ export function App() {
         {entry.splatEnvironment ? null : (
           <Environment preset="lobby" background backgroundBlurriness={1} backgroundIntensity={0.6} environmentIntensity={0.5} />
         )}
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[2, -2, 5]} intensity={1.5} castShadow />
-        <directionalLight position={[-1, 1, 3]} intensity={0.3} />
+        {sceneAuthoring.enabled && !hasSplatEnvironment ? (
+          <ScenarioLighting preset={sceneAuthoringPreset} intensity={1} />
+        ) : (
+          <>
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[2, -2, 5]} intensity={1.5} castShadow />
+            <directionalLight position={[-1, 1, 3]} intensity={0.3} />
+          </>
+        )}
         {entry.splatEnvironment ? null : (
           <gridHelper
             args={[4, 40, '#64748b', '#94a3b8']}
