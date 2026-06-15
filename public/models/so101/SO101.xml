@@ -129,6 +129,7 @@
 
                 <!-- Camera -->
                 <body name="Camera" pos="0 -0.022 0.05" euler="1.5708 -1.5708 0">
+                  <camera name="wrist_dataset_camera" pos="-0.015 -0.026 0" euler="0 -1.5708 0" fovy="55"/>
                   <geom type="mesh" mesh="XLeRobot_camera1" pos="-0.015 -0.026 0" material="white" class="visual"/>
                   <geom type="mesh" mesh="XLeRobot_camera2" pos="-0.015 -0.026 0" material="motor" class="visual"/>
                 </body>

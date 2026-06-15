@@ -469,13 +469,6 @@ export function App() {
       editable: false,
     },
   });
-  useControls('Dataset Cameras', {
-    'record sample': button(recordDatasetSample),
-    status: {
-      value: datasetCaptureLabel,
-      editable: false,
-    },
-  });
   const selectedCameraFrame =
     cameraFrameConfigs[capture.camera] ?? cameraFrameConfigs.orbit;
   selectedCameraFrameRef.current = {

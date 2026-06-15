@@ -87,7 +87,9 @@ type GeneratedRobotResources = {
     readonly keyframes: {
       readonly home: 'home';
     };
-    readonly cameras: {};
+    readonly cameras: {
+      readonly wrist_dataset_camera: 'wrist_dataset_camera';
+    };
   };
   readonly xlerobot: {
     readonly actuators: {
@@ -423,7 +425,9 @@ const generatedRobotResources: GeneratedRobotResources = {
     keyframes: {
       home: 'home',
     },
-    cameras: {},
+    cameras: {
+      wrist_dataset_camera: 'wrist_dataset_camera',
+    },
   },
   xlerobot: {
     actuators: {
@@ -699,7 +703,7 @@ declare module 'mujoco-react' {
         sites: 'tcp';
         geoms: never;
         keyframes: 'home';
-        cameras: never;
+        cameras: 'wrist_dataset_camera';
       };
       xlerobot: {
         actuators: 'Elbow_L' | 'Elbow_R' | 'forward' | 'head_pan' | 'head_tilt' | 'Jaw_L' | 'Jaw_R' | 'Pitch_L' | 'Pitch_R' | 'Rotation_L' | 'Rotation_R' | 'turn' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
@@ -739,6 +743,7 @@ declare module 'mujoco-react' {
     sites: 'head_camera_depth_optical_frame' | 'head_camera_rgb_optical_frame' | 'imu_in_pelvis' | 'imu_in_torso' | 'left_foot' | 'right_foot' | 'tcp';
     geoms: 'back_caster' | 'FL' | 'floor' | 'FR' | 'front_caster' | 'HL' | 'HR';
     keyframes: 'home' | 'stand';
+    cameras: 'wrist_dataset_camera';
   }
 
   export namespace RobotActuators {

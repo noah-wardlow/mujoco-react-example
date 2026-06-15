@@ -1,4 +1,4 @@
-import { RobotActuators, RobotBodies, RobotJoints, RobotSites, withSplatEnvironment } from 'mujoco-react';
+import { RobotActuators, RobotCameras, RobotJoints, RobotSites, withSplatEnvironment } from 'mujoco-react';
 import type {
   CameraFrameMountSelector,
   IkConfig,
@@ -244,7 +244,7 @@ export const robots: Record<string, RobotEntry> = {
       label: 'SO101 wrist dataset camera',
       cameraKeys: ['wrist'],
       aliases: {
-        wrist: { bodyName: RobotBodies.so101.Camera },
+        wrist: { cameraName: RobotCameras.so101.wrist_dataset_camera },
       },
     },
   },
@@ -309,12 +309,10 @@ export const robots: Record<string, RobotEntry> = {
     hasIk: false,
     splatEnvironment: XLEROBOT_KITCHEN_SPLAT,
     datasetCameras: {
-      label: 'XLeRobot mounted dataset cameras',
-      cameraKeys: ['head', 'left_wrist', 'right_wrist'],
+      label: 'XLeRobot head dataset camera',
+      cameraKeys: ['head'],
       aliases: {
         head: { siteName: RobotSites.xlerobot.head_camera_rgb_optical_frame },
-        left_wrist: { bodyName: RobotBodies.xlerobot.Left_Arm_Camera },
-        right_wrist: { bodyName: RobotBodies.xlerobot.Right_Arm_Camera },
       },
     },
   },
