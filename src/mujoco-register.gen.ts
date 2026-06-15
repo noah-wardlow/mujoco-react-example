@@ -50,6 +50,7 @@ type GeneratedRobotResources = {
     readonly keyframes: {
       readonly home: 'home';
     };
+    readonly cameras: {};
   };
   readonly so101: {
     readonly actuators: {
@@ -86,6 +87,7 @@ type GeneratedRobotResources = {
     readonly keyframes: {
       readonly home: 'home';
     };
+    readonly cameras: {};
   };
   readonly xlerobot: {
     readonly actuators: {
@@ -161,6 +163,7 @@ type GeneratedRobotResources = {
       readonly front_caster: 'front_caster';
     };
     readonly keyframes: {};
+    readonly cameras: {};
   };
   readonly spot: {
     readonly actuators: {
@@ -218,6 +221,7 @@ type GeneratedRobotResources = {
     readonly keyframes: {
       readonly home: 'home';
     };
+    readonly cameras: {};
   };
   readonly g1: {
     readonly actuators: {
@@ -332,6 +336,7 @@ type GeneratedRobotResources = {
     readonly keyframes: {
       readonly stand: 'stand';
     };
+    readonly cameras: {};
   };
 };
 
@@ -381,6 +386,7 @@ const generatedRobotResources: GeneratedRobotResources = {
     keyframes: {
       home: 'home',
     },
+    cameras: {},
   },
   so101: {
     actuators: {
@@ -417,6 +423,7 @@ const generatedRobotResources: GeneratedRobotResources = {
     keyframes: {
       home: 'home',
     },
+    cameras: {},
   },
   xlerobot: {
     actuators: {
@@ -492,6 +499,7 @@ const generatedRobotResources: GeneratedRobotResources = {
       front_caster: 'front_caster',
     },
     keyframes: {},
+    cameras: {},
   },
   spot: {
     actuators: {
@@ -549,6 +557,7 @@ const generatedRobotResources: GeneratedRobotResources = {
     keyframes: {
       home: 'home',
     },
+    cameras: {},
   },
   g1: {
     actuators: {
@@ -663,6 +672,7 @@ const generatedRobotResources: GeneratedRobotResources = {
     keyframes: {
       stand: 'stand',
     },
+    cameras: {},
   },
 };
 
@@ -679,6 +689,7 @@ declare module 'mujoco-react' {
         sites: 'tcp';
         geoms: 'floor';
         keyframes: 'home';
+        cameras: never;
       };
       so101: {
         actuators: 'Elbow' | 'Jaw' | 'Pitch' | 'Rotation' | 'Wrist_Pitch' | 'Wrist_Roll';
@@ -688,6 +699,7 @@ declare module 'mujoco-react' {
         sites: 'tcp';
         geoms: never;
         keyframes: 'home';
+        cameras: never;
       };
       xlerobot: {
         actuators: 'Elbow_L' | 'Elbow_R' | 'forward' | 'head_pan' | 'head_tilt' | 'Jaw_L' | 'Jaw_R' | 'Pitch_L' | 'Pitch_R' | 'Rotation_L' | 'Rotation_R' | 'turn' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
@@ -697,6 +709,7 @@ declare module 'mujoco-react' {
         sites: 'head_camera_depth_optical_frame' | 'head_camera_rgb_optical_frame';
         geoms: 'back_caster' | 'front_caster';
         keyframes: never;
+        cameras: never;
       };
       spot: {
         actuators: 'fl_hx' | 'fl_hy' | 'fl_kn' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn';
@@ -706,6 +719,7 @@ declare module 'mujoco-react' {
         sites: never;
         geoms: 'FL' | 'floor' | 'FR' | 'HL' | 'HR';
         keyframes: 'home';
+        cameras: never;
       };
       g1: {
         actuators: 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint';
@@ -715,6 +729,7 @@ declare module 'mujoco-react' {
         sites: 'imu_in_pelvis' | 'imu_in_torso' | 'left_foot' | 'right_foot';
         geoms: 'floor';
         keyframes: 'stand';
+        cameras: never;
       };
     };
     actuators: 'actuator1' | 'actuator2' | 'actuator3' | 'actuator4' | 'actuator5' | 'actuator6' | 'actuator7' | 'Elbow' | 'Elbow_L' | 'Elbow_R' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'forward' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'gripper' | 'head_pan' | 'head_tilt' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw' | 'Jaw_L' | 'Jaw_R' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation' | 'Rotation_L' | 'Rotation_R' | 'turn' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'Wrist_Pitch' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
@@ -780,6 +795,14 @@ declare module 'mujoco-react' {
     export type xlerobot = RobotResource<'xlerobot', 'keyframes'>;
     export type spot = RobotResource<'spot', 'keyframes'>;
     export type g1 = RobotResource<'g1', 'keyframes'>;
+  }
+
+  export namespace RobotCameras {
+    export type franka = RobotResource<'franka', 'cameras'>;
+    export type so101 = RobotResource<'so101', 'cameras'>;
+    export type xlerobot = RobotResource<'xlerobot', 'cameras'>;
+    export type spot = RobotResource<'spot', 'cameras'>;
+    export type g1 = RobotResource<'g1', 'cameras'>;
   }
 
 }

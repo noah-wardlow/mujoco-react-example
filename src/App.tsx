@@ -15,15 +15,18 @@ import {
   useMujoco,
   useGravityCompensation,
   useBeforePhysicsStep,
+  recordMountedCameraFrameSequence,
 } from 'mujoco-react';
 import { SparkSplatEnvironment } from 'mujoco-react/spark';
 import type {
   MujocoSimAPI,
   CameraFrameCaptureOptions,
+  CameraFrameCaptureSource,
   IkConfig,
   ScenarioLightingPreset,
   VisualScenarioConfig,
 } from 'mujoco-react';
+import type { DatasetCameraConfig } from './configs';
 import { robots } from './configs';
 import { FrankaController } from './controllers/FrankaController';
 import { SO101Controller } from './controllers/SO101Controller';
@@ -175,6 +178,130 @@ function vec3(x: number, y: number, z: number): [number, number, number] {
   return [x, y, z];
 }
 
+interface DatasetCameraPreview {
+  key: string;
+  dataUrl: string;
+  source: string;
+}
+
+function formatCaptureSource(source: CameraFrameCaptureSource) {
+  if (source.kind === 'mujoco-camera') return `camera:${source.cameraName}`;
+  if (source.kind === 'mujoco-site') return `site:${source.siteName}`;
+  if (source.kind === 'mujoco-body') return `body:${source.bodyName}`;
+  return source.kind;
+}
+
+function DatasetCameraPanel({
+  config,
+  previews,
+  status,
+  onRecord,
+}: {
+  config?: DatasetCameraConfig;
+  previews: DatasetCameraPreview[];
+  status: string;
+  onRecord: () => void;
+}) {
+  if (!config) return null;
+
+  return (
+    <section
+      data-testid="dataset-camera-panel"
+      style={{
+        position: 'fixed',
+        left: 16,
+        bottom: 16,
+        width: 340,
+        maxWidth: 'calc(100vw - 32px)',
+        padding: 12,
+        border: '1px solid rgba(226, 232, 240, 0.16)',
+        background: 'rgba(15, 23, 42, 0.88)',
+        color: '#e2e8f0',
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: 12,
+        zIndex: 20,
+        backdropFilter: 'blur(10px)',
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 13 }}>Mounted dataset cameras</div>
+          <div style={{ color: '#94a3b8', marginTop: 2 }}>{config.label}</div>
+        </div>
+        <button
+          data-testid="dataset-camera-record"
+          type="button"
+          onClick={onRecord}
+          style={{
+            alignSelf: 'start',
+            padding: '5px 8px',
+            border: '1px solid rgba(125, 211, 252, 0.45)',
+            background: 'rgba(14, 165, 233, 0.16)',
+            color: '#e0f2fe',
+            font: 'inherit',
+            cursor: 'pointer',
+          }}
+        >
+          Record
+        </button>
+      </div>
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${Math.min(config.cameraKeys.length, 3)}, minmax(0, 1fr))`,
+          gap: 8,
+          marginTop: 10,
+        }}
+      >
+        {config.cameraKeys.map((key) => {
+          const preview = previews.find((item) => item.key === key);
+          return (
+            <div key={key} style={{ minWidth: 0 }}>
+              <div
+                style={{
+                  aspectRatio: '4 / 3',
+                  display: 'grid',
+                  placeItems: 'center',
+                  overflow: 'hidden',
+                  background: '#020617',
+                  border: '1px solid rgba(148, 163, 184, 0.18)',
+                }}
+              >
+                {preview ? (
+                  <img
+                    src={preview.dataUrl}
+                    alt={`${key} mounted camera preview`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <span style={{ color: '#64748b' }}>{key}</span>
+                )}
+              </div>
+              <div
+                title={preview?.source ?? key}
+                style={{
+                  marginTop: 4,
+                  color: '#cbd5e1',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {preview ? `${key} · ${preview.source}` : key}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ color: '#94a3b8', marginTop: 10 }}>
+        {config.cameraKeys.length} stream{config.cameraKeys.length === 1 ? '' : 's'} · {status}
+      </div>
+    </section>
+  );
+}
+
 export function App() {
   const apiRef = useRef<MujocoSimAPI>(null);
   const captureMetadataRef = useRef({
@@ -185,6 +312,8 @@ export function App() {
   const readyGenerationRef = useRef(0);
   const [sceneSettling, setSceneSettling] = useState(true);
   const [captureLabel, setCaptureLabel] = useState('idle');
+  const [datasetCaptureLabel, setDatasetCaptureLabel] = useState('ready');
+  const [datasetPreviews, setDatasetPreviews] = useState<DatasetCameraPreview[]>([]);
   const selectedCameraFrameRef = useRef<{
     label: string;
     options: CameraFrameCaptureOptions;
@@ -192,12 +321,67 @@ export function App() {
     label: 'orbit',
     options: { type: 'image/png' },
   });
+  const datasetCamerasRef = useRef<DatasetCameraConfig | undefined>(undefined);
 
   const { robot: robotKey } = useControls({
     robot: { value: 'franka', options: robotOptions, label: 'Robot' },
   });
 
   const entry = robots[robotKey];
+  datasetCamerasRef.current = entry.datasetCameras;
+
+  const recordDatasetSample = useCallback(async () => {
+    const api = apiRef.current;
+    const datasetCameras = datasetCamerasRef.current;
+    if (!api) {
+      setDatasetCaptureLabel('MuJoCo scene is not ready for dataset capture');
+      return;
+    }
+    if (!datasetCameras) {
+      setDatasetCaptureLabel('select SO101 or XLeRobot for mounted dataset cameras');
+      return;
+    }
+
+    try {
+      const previews: DatasetCameraPreview[] = [];
+      setDatasetCaptureLabel('recording mounted camera sample...');
+      const result = await recordMountedCameraFrameSequence(api, {
+        cameraKeys: datasetCameras.cameraKeys,
+        aliases: datasetCameras.aliases,
+        defaults: {
+          width: 256,
+          height: 192,
+          type: 'image/png',
+          fov: 55,
+          near: 0.01,
+          far: 100,
+        },
+        frames: 1,
+        stepsPerFrame: 0,
+        retainFrames: false,
+        requireAll: true,
+        requireMountedSources: true,
+        onFrame: ({ cameras }) => {
+          for (const [key, frame] of Object.entries(cameras)) {
+            previews.push({
+              key,
+              dataUrl: frame.dataUrl,
+              source: formatCaptureSource(frame.source),
+            });
+          }
+        },
+      });
+
+      setDatasetPreviews(previews);
+      setDatasetCaptureLabel(
+        `${result.frameCount} frame captured from ${Object.keys(result.cameraSummaries).length} mounted stream(s)`
+      );
+    } catch (error) {
+      setDatasetCaptureLabel(
+        error instanceof Error ? error.message : 'dataset camera capture failed'
+      );
+    }
+  }, []);
 
   const sim = useControls('Simulation', {
     paused: false,
@@ -285,6 +469,13 @@ export function App() {
       editable: false,
     },
   });
+  useControls('Dataset Cameras', {
+    'record sample': button(recordDatasetSample),
+    status: {
+      value: datasetCaptureLabel,
+      editable: false,
+    },
+  });
   const selectedCameraFrame =
     cameraFrameConfigs[capture.camera] ?? cameraFrameConfigs.orbit;
   selectedCameraFrameRef.current = {
@@ -323,7 +514,13 @@ export function App() {
   useEffect(() => {
     readyGenerationRef.current += 1;
     setSceneSettling(true);
-  }, [robotKey]);
+    setDatasetPreviews([]);
+    setDatasetCaptureLabel(
+      entry.datasetCameras
+        ? `${entry.datasetCameras.cameraKeys.length} mounted stream(s) ready`
+        : 'select SO101 or XLeRobot for mounted dataset cameras'
+    );
+  }, [entry.datasetCameras, robotKey]);
 
   const handleReady = useCallback(() => {
     const generation = readyGenerationRef.current;
@@ -430,6 +627,12 @@ export function App() {
       </MujocoCanvas>
 
       {/* HTML overlay — outside R3F canvas */}
+      <DatasetCameraPanel
+        config={entry.datasetCameras}
+        previews={datasetPreviews}
+        status={datasetCaptureLabel}
+        onRecord={() => { void recordDatasetSample(); }}
+      />
       <KeyboardHelp robotKey={robotKey} />
       <GitHubLink />
     </MujocoProvider>
