@@ -51,19 +51,28 @@ const FRANKA_ARM_ACTUATORS = [
 ];
 
 const SO101_ARM_JOINTS = [
-  RobotJoints.so101.Rotation,
-  RobotJoints.so101.Pitch,
-  RobotJoints.so101.Elbow,
-  RobotJoints.so101.Wrist_Pitch,
-  RobotJoints.so101.Wrist_Roll,
+  RobotJoints.so101.shoulder_pan,
+  RobotJoints.so101.shoulder_lift,
+  RobotJoints.so101.elbow_flex,
+  RobotJoints.so101.wrist_flex,
+  RobotJoints.so101.wrist_roll,
 ];
 
 const SO101_ARM_ACTUATORS = [
-  RobotActuators.so101.Rotation,
-  RobotActuators.so101.Pitch,
-  RobotActuators.so101.Elbow,
-  RobotActuators.so101.Wrist_Pitch,
-  RobotActuators.so101.Wrist_Roll,
+  RobotActuators.so101.shoulder_pan,
+  RobotActuators.so101.shoulder_lift,
+  RobotActuators.so101.elbow_flex,
+  RobotActuators.so101.wrist_flex,
+  RobotActuators.so101.wrist_roll,
+];
+
+const SO101_HOME_JOINTS = [
+  0,
+  -1.5707963268,
+  1.5707963268,
+  0.659999464,
+  0,
+  -0.17453,
 ];
 
 export const XLEROBOT_HOME_JOINTS = [
@@ -189,7 +198,7 @@ export const robots: Record<string, RobotEntry> = {
     config: {
       src: `${LOCAL_MODEL_BASE}so101/`,
       sceneFile: 'SO101.xml',
-      homeJoints: [0.0158, 2.052, 2.1307, -0.0845, 1.5857, -0.3745],
+      homeJoints: SO101_HOME_JOINTS,
       sceneObjects: [
         {
           name: 'floor',
@@ -209,7 +218,7 @@ export const robots: Record<string, RobotEntry> = {
           name: 'red_cube',
           type: 'box',
           size: [0.015, 0.015, 0.015],
-          position: [0.3, -0.65, 0.815],
+          position: [0.66, -0.33, 0.815],
           rgba: [0.9, 0.2, 0.15, 1],
           mass: 0.02,
           freejoint: true,
@@ -222,7 +231,7 @@ export const robots: Record<string, RobotEntry> = {
           name: 'blue_cube',
           type: 'box',
           size: [0.012, 0.012, 0.015],
-          position: [0.38, -0.65, 0.815],
+          position: [0.58, -0.32, 0.815],
           rgba: [0.15, 0.4, 0.9, 1],
           mass: 0.02,
           freejoint: true,
@@ -235,7 +244,7 @@ export const robots: Record<string, RobotEntry> = {
     orbitTarget: [0.35, -0.3, 0.8],
     hasIk: true,
     ikConfig: {
-      siteName: RobotSites.so101.tcp,
+      siteName: RobotSites.so101.gripperframe,
       joints: SO101_ARM_JOINTS,
       actuators: SO101_ARM_ACTUATORS,
     },
@@ -244,7 +253,7 @@ export const robots: Record<string, RobotEntry> = {
       label: 'SO101 wrist dataset camera',
       cameraKeys: ['wrist'],
       aliases: {
-        wrist: { cameraName: RobotCameras.so101.wrist_dataset_camera },
+        wrist: { cameraName: RobotCameras.so101.wrist_cam },
       },
     },
   },
@@ -309,10 +318,10 @@ export const robots: Record<string, RobotEntry> = {
     hasIk: false,
     splatEnvironment: XLEROBOT_KITCHEN_SPLAT,
     datasetCameras: {
-      label: 'XLeRobot head dataset camera',
-      cameraKeys: ['head'],
+      label: 'XLeRobot dock dataset camera',
+      cameraKeys: ['dock'],
       aliases: {
-        head: { siteName: RobotSites.xlerobot.head_camera_rgb_optical_frame },
+        dock: { cameraName: RobotCameras.xlerobot.dock_cam },
       },
     },
   },

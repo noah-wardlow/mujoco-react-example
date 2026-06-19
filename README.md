@@ -48,7 +48,11 @@ The app demonstrates the **composable children** pattern — each feature is an 
 
     {/* Debug overlays */}
     <ContactMarkers visible={debug.contacts} />
-    <Debug showSites={debug.sites} showJoints={debug.joints} />
+    <Debug
+      showSites={debug.sites}
+      showJoints={debug.joints}
+      showCameras={debug.cameras}
+    />
 
     {/* Scene decoration */}
     <ambientLight />
@@ -166,7 +170,7 @@ The [Leva](https://github.com/pmndrs/leva) panel provides runtime controls:
 
 - **Robot** — switch between Franka, SO101, XLeRobot, Spot, Unitree G1
 - **Simulation** — pause, speed, gravity compensation, IK gizmo toggle, reset
-- **Debug** — contacts, sites, joints visualization
+- **Debug** — contacts, sites, joints, and camera frustum visualization
 
 ## Key Bindings
 

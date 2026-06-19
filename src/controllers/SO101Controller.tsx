@@ -7,7 +7,8 @@ const config: ArmControllerConfig = {
   arms: [{
     indices: [0, 1, 2, 3, 4, 5],
     keys: ['KeyD', 'KeyA', 'KeyW', 'KeyS', 'KeyQ', 'KeyE', 'KeyR', 'KeyF', 'KeyZ', 'KeyC', 'KeyV'],
-    initialJoints: [0.0158, 2.052, 2.1307, -0.0845, 1.5857, -0.3745],
+    initialJoints: [0, -1.5707963268, 1.5707963268, 0.659999464, 0, -0.17453],
+    gripperClosed: -0.17453,
   }],
 };
 

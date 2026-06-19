@@ -16,6 +16,7 @@ import {
   useGravityCompensation,
   useBeforePhysicsStep,
   recordMountedCameraFrameSequence,
+  CAPTURE_EXCLUDE_KEY,
 } from 'mujoco-react';
 import { SparkSplatEnvironment } from 'mujoco-react/spark';
 import type {
@@ -395,6 +396,7 @@ export function App() {
     contacts: false,
     sites: false,
     joints: false,
+    cameras: false,
   });
 
   const sceneAuthoring = useControls('Scene Authoring', {
@@ -594,7 +596,11 @@ export function App() {
 
         {/* Debug overlays */}
         <ContactMarkers visible={debug.contacts} />
-        <Debug showSites={debug.sites} showJoints={debug.joints} />
+        <Debug
+          showSites={debug.sites}
+          showJoints={debug.joints}
+          showCameras={debug.cameras}
+        />
 
         {/* Scene decoration — lights, environment, grid */}
         {entry.splatEnvironment ? null : (
@@ -614,6 +620,7 @@ export function App() {
             args={[4, 40, '#64748b', '#94a3b8']}
             rotation={[Math.PI / 2, 0, 0]}
             position={[0, 0, 0.001]}
+            userData={{ [CAPTURE_EXCLUDE_KEY]: true }}
           />
         )}
         <Stats />

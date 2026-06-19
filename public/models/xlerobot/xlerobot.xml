@@ -191,7 +191,7 @@
                     <geom type="mesh" mesh="Moving_Jaw_part3" class="collision" friction="3 0.2 0.1" condim="6"/>
                   </body>
 
-                  <!-- Camera on first arm -->
+                  <!-- Camera housing on first arm. -->
                   <body name="Right_Arm_Camera" pos="0 -0.022 0.05" euler="1.5708 -1.5708 0">
                     <geom type="mesh" mesh="XLeRobot_camera1" pos="-0.015 -0.026 0" material="white" class="visual"/>
                     <geom type="mesh" mesh="XLeRobot_camera2" pos="-0.015 -0.026 0" material="motor" class="visual"/>
@@ -274,7 +274,7 @@
                     <geom type="mesh" mesh="Moving_Jaw_part3" class="collision" friction="3 0.2 0.1" condim="6"/>
                   </body>
 
-                  <!-- Camera on second arm -->
+                  <!-- Camera housing on second arm. -->
                   <body name="Left_Arm_Camera" pos="0 -0.021 0.05" euler="1.5708 -1.5708 0">
                     <geom type="mesh" mesh="XLeRobot_camera1" pos="-0.015 -0.026 0" material="white" class="visual"/>
                     <geom type="mesh" mesh="XLeRobot_camera2" pos="-0.015 -0.026 0" material="motor" class="visual"/>
@@ -308,15 +308,8 @@
             <geom type="mesh" mesh="tophead5" pos="0.16265 -0.006 -1.16815" material="white" class="visual"/>
             <geom type="mesh" mesh="tophead6" pos="0.16265 -0.006 -1.16815" material="motor" class="visual"/>
             
-            <!-- Camera frames -->
-            <body name="head_camera_link" pos="0.025 0 0.03">
-              <body name="head_camera_rgb_frame" pos="0 -0.00 0" euler="-1.5708 0 -1.5708">
-                <site name="head_camera_rgb_optical_frame" type="box" size="0.01 0.01 0.01" rgba="1 0 0 0.3"/>
-              </body>
-              <body name="head_camera_depth_frame" pos="0 0.00 0" euler="-1.5708 0 -1.5708">
-                <site name="head_camera_depth_optical_frame" type="box" size="0.01 0.01 0.01" rgba="0 1 0 0.0"/>
-              </body>
-            </body>
+            <!-- Standard MuJoCo camera aligned with the GS-Web head camera mesh. -->
+            <camera name="dock_cam" pos="0.100 0 0" xyaxes="0 -1 0 0.174 0 0.985" fovy="74.5"/>
           </body>
         </body>
       </body>
