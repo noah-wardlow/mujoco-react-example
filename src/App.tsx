@@ -28,7 +28,7 @@ import type {
   VisualScenarioConfig,
 } from 'mujoco-react';
 import type { DatasetCameraConfig } from './configs';
-import { robots } from './configs';
+import { models } from './configs';
 import { FrankaController } from './controllers/FrankaController';
 import { SO101Controller } from './controllers/SO101Controller';
 import { XLeRobotController } from './controllers/XLeRobotController';
@@ -109,13 +109,13 @@ function HoldCtrl({ values }: { values?: number[] }) {
 
 /** Scene children that need hooks (useIkController) */
 function SceneChildren({
-  robotKey,
+  modelKey,
   ikConfig,
   showGizmo,
   gizmoScale,
   holdCtrl,
 }: {
-  robotKey: string;
+  modelKey: string;
   ikConfig: IkConfig | null;
   showGizmo: boolean;
   gizmoScale?: number;
@@ -128,16 +128,16 @@ function SceneChildren({
       {ik && showGizmo && <IkGizmo controller={ik} scale={gizmoScale} />}
       <HoldCtrl values={holdCtrl} />
 
-      {/* Per-robot controllers — swap in your own */}
-      {robotKey === 'franka' && <FrankaController />}
-      {robotKey === 'so101' && <SO101Controller ik={ik} />}
-      {robotKey === 'xlerobot' && <XLeRobotController ik={ik} />}
+      {/* Per-model controllers — swap in your own */}
+      {modelKey === 'franka' && <FrankaController />}
+      {modelKey === 'so101' && <SO101Controller ik={ik} />}
+      {modelKey === 'xlerobot' && <XLeRobotController ik={ik} />}
     </>
   );
 }
 
-const robotOptions = Object.fromEntries(
-  Object.entries(robots).map(([key, r]) => [r.label, key])
+const modelOptions = Object.fromEntries(
+  Object.entries(models).map(([key, entry]) => [entry.label, key])
 );
 const Z_UP: [number, number, number] = [0, 0, 1];
 
@@ -306,7 +306,7 @@ function DatasetCameraPanel({
 export function App() {
   const apiRef = useRef<MujocoSimAPI>(null);
   const captureMetadataRef = useRef({
-    robotKey: 'franka',
+    modelKey: 'franka',
     preset: defaultSceneAuthoringPreset,
     seed: 17,
   });
@@ -324,11 +324,11 @@ export function App() {
   });
   const datasetCamerasRef = useRef<DatasetCameraConfig | undefined>(undefined);
 
-  const { robot: robotKey } = useControls({
-    robot: { value: 'franka', options: robotOptions, label: 'Robot' },
+  const { model: modelKey } = useControls({
+    model: { value: 'franka', options: modelOptions, label: 'Model' },
   });
 
-  const entry = robots[robotKey];
+  const entry = models[modelKey];
   datasetCamerasRef.current = entry.datasetCameras;
 
   const recordDatasetSample = useCallback(async () => {
@@ -413,7 +413,7 @@ export function App() {
   });
   const sceneAuthoringPreset = toSceneAuthoringPreset(sceneAuthoring.preset);
   captureMetadataRef.current = {
-    robotKey,
+    modelKey,
     preset: sceneAuthoringPreset,
     seed: sceneAuthoring.seed,
   };
@@ -459,7 +459,7 @@ export function App() {
         if (!frame) throw new Error('MuJoCo scene is not ready.');
         downloadBlob(
           frame.blob,
-          `${metadata.robotKey}-${cameraFrame.label}-${metadata.preset}-seed-${metadata.seed}.png`
+          `${metadata.modelKey}-${cameraFrame.label}-${metadata.preset}-seed-${metadata.seed}.png`
         );
         setCaptureLabel('png saved');
       } catch (error) {
@@ -477,14 +477,14 @@ export function App() {
     label: capture.camera,
     options: selectedCameraFrame,
   };
-  const canvasKey = useMemo(() => robotKey, [robotKey]);
+  const canvasKey = useMemo(() => modelKey, [modelKey]);
 
   const ikConfig = entry.hasIk && entry.ikConfig ? entry.ikConfig : null;
   const hasSplatEnvironment = Boolean(entry.splatEnvironment);
   const applySceneAuthoring = sceneAuthoring.enabled;
   const visualScenario: VisualScenarioConfig = useMemo(
     () => ({
-      id: `${robotKey}-${sceneAuthoring.preset}`,
+      id: `${modelKey}-${sceneAuthoring.preset}`,
       label: `${entry.label} ${sceneAuthoringPreset}`,
       seed: sceneAuthoring.seed,
       lighting: sceneAuthoringPreset,
@@ -498,7 +498,7 @@ export function App() {
     }),
     [
       entry.label,
-      robotKey,
+      modelKey,
       sceneAuthoring.exposure,
       sceneAuthoring.materials,
       sceneAuthoringPreset,
@@ -515,7 +515,7 @@ export function App() {
         ? `${entry.datasetCameras.cameraKeys.length} mounted stream(s) ready`
         : 'select SO101 or XLeRobot for mounted dataset cameras'
     );
-  }, [entry.datasetCameras, robotKey]);
+  }, [entry.datasetCameras, modelKey]);
 
   const handleReady = useCallback(() => {
     const generation = readyGenerationRef.current;
@@ -574,9 +574,9 @@ export function App() {
           )}
         />
 
-        {/* IK + per-robot controllers */}
+        {/* IK + per-model controllers */}
         <SceneChildren
-          robotKey={robotKey}
+          modelKey={modelKey}
           ikConfig={ikConfig}
           showGizmo={sim.gizmo}
           gizmoScale={entry.gizmoScale}
@@ -633,7 +633,7 @@ export function App() {
         status={datasetCaptureLabel}
         onRecord={() => { void recordDatasetSample(); }}
       />
-      <KeyboardHelp robotKey={robotKey} />
+      <KeyboardHelp modelKey={modelKey} />
       <GitHubLink />
     </MujocoProvider>
   );

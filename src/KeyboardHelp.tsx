@@ -42,8 +42,8 @@ const HELP: Record<string, string[]> = {
   ],
 };
 
-export function KeyboardHelp({ robotKey }: { robotKey: string }) {
-  const lines = HELP[robotKey];
+export function KeyboardHelp({ modelKey }: { modelKey: string }) {
+  const lines = HELP[modelKey];
   if (!lines) return null;
 
   return (

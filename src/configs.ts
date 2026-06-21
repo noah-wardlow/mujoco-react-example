@@ -1,4 +1,4 @@
-import { RobotActuators, RobotCameras, RobotJoints, RobotSites, withSplatEnvironment } from 'mujoco-react';
+import { ModelActuators, ModelCameras, ModelJoints, ModelSites, withSplatEnvironment } from 'mujoco-react';
 import type {
   CameraFrameMountSelector,
   IkConfig,
@@ -15,7 +15,7 @@ export interface DatasetCameraConfig {
   >;
 }
 
-export interface RobotEntry {
+export interface ModelEntry {
   label: string;
   config: SceneConfig;
   camera: { position: [number, number, number]; fov: number };
@@ -31,39 +31,39 @@ export interface RobotEntry {
 const LOCAL_MODEL_BASE = '/models/';
 
 const FRANKA_ARM_JOINTS = [
-  RobotJoints.franka.joint1,
-  RobotJoints.franka.joint2,
-  RobotJoints.franka.joint3,
-  RobotJoints.franka.joint4,
-  RobotJoints.franka.joint5,
-  RobotJoints.franka.joint6,
-  RobotJoints.franka.joint7,
+  ModelJoints.franka.joint1,
+  ModelJoints.franka.joint2,
+  ModelJoints.franka.joint3,
+  ModelJoints.franka.joint4,
+  ModelJoints.franka.joint5,
+  ModelJoints.franka.joint6,
+  ModelJoints.franka.joint7,
 ];
 
 const FRANKA_ARM_ACTUATORS = [
-  RobotActuators.franka.actuator1,
-  RobotActuators.franka.actuator2,
-  RobotActuators.franka.actuator3,
-  RobotActuators.franka.actuator4,
-  RobotActuators.franka.actuator5,
-  RobotActuators.franka.actuator6,
-  RobotActuators.franka.actuator7,
+  ModelActuators.franka.actuator1,
+  ModelActuators.franka.actuator2,
+  ModelActuators.franka.actuator3,
+  ModelActuators.franka.actuator4,
+  ModelActuators.franka.actuator5,
+  ModelActuators.franka.actuator6,
+  ModelActuators.franka.actuator7,
 ];
 
 const SO101_ARM_JOINTS = [
-  RobotJoints.so101.shoulder_pan,
-  RobotJoints.so101.shoulder_lift,
-  RobotJoints.so101.elbow_flex,
-  RobotJoints.so101.wrist_flex,
-  RobotJoints.so101.wrist_roll,
+  ModelJoints.so101.shoulder_pan,
+  ModelJoints.so101.shoulder_lift,
+  ModelJoints.so101.elbow_flex,
+  ModelJoints.so101.wrist_flex,
+  ModelJoints.so101.wrist_roll,
 ];
 
 const SO101_ARM_ACTUATORS = [
-  RobotActuators.so101.shoulder_pan,
-  RobotActuators.so101.shoulder_lift,
-  RobotActuators.so101.elbow_flex,
-  RobotActuators.so101.wrist_flex,
-  RobotActuators.so101.wrist_roll,
+  ModelActuators.so101.shoulder_pan,
+  ModelActuators.so101.shoulder_lift,
+  ModelActuators.so101.elbow_flex,
+  ModelActuators.so101.wrist_flex,
+  ModelActuators.so101.wrist_roll,
 ];
 
 const SO101_HOME_JOINTS = [
@@ -134,7 +134,7 @@ const XLEROBOT_KITCHEN_SPLAT: PairedSplatEnvironmentConfig = {
   },
 };
 
-export const robots: Record<string, RobotEntry> = {
+export const models: Record<string, ModelEntry> = {
   franka: {
     label: 'Franka Panda',
     config: {
@@ -187,7 +187,7 @@ export const robots: Record<string, RobotEntry> = {
     orbitTarget: [0, 0, 0.4],
     hasIk: true,
     ikConfig: {
-      siteName: RobotSites.franka.tcp,
+      siteName: ModelSites.franka.tcp,
       joints: FRANKA_ARM_JOINTS,
       actuators: FRANKA_ARM_ACTUATORS,
     },
@@ -244,7 +244,7 @@ export const robots: Record<string, RobotEntry> = {
     orbitTarget: [0.35, -0.3, 0.8],
     hasIk: true,
     ikConfig: {
-      siteName: RobotSites.so101.gripperframe,
+      siteName: ModelSites.so101.gripperframe,
       joints: SO101_ARM_JOINTS,
       actuators: SO101_ARM_ACTUATORS,
     },
@@ -253,7 +253,7 @@ export const robots: Record<string, RobotEntry> = {
       label: 'SO101 wrist dataset camera',
       cameraKeys: ['wrist'],
       aliases: {
-        wrist: { cameraName: RobotCameras.so101.wrist_cam },
+        wrist: { cameraName: ModelCameras.so101.wrist_cam },
       },
     },
   },
@@ -321,7 +321,7 @@ export const robots: Record<string, RobotEntry> = {
       label: 'XLeRobot dock dataset camera',
       cameraKeys: ['dock'],
       aliases: {
-        dock: { cameraName: RobotCameras.xlerobot.dock_cam },
+        dock: { cameraName: ModelCameras.xlerobot.dock_cam },
       },
     },
   },
