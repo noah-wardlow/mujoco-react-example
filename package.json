@@ -12,7 +12,7 @@
     "@react-three/fiber": "^9.5.0",
     "@sparkjsdev/spark": "^2.1.0",
     "leva": "^0.10.1",
-    "mujoco-react": "^10.3.0",
+    "mujoco-react": "^10.4.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^4.0.6",
