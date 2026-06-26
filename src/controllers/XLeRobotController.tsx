@@ -1,29 +1,43 @@
 import { useArmController } from './useArmController';
 import type { ArmControllerConfig } from './useArmController';
+import { ModelActuators } from 'mujoco-react';
 import type { IkContextValue } from 'mujoco-react';
 import { XLEROBOT_HOME_JOINTS } from '../configs';
 
 const config: ArmControllerConfig = {
-  numActuators: 16,
   base: {
-    indices: [0, 1],
+    actuators: [ModelActuators.xlerobot.forward, ModelActuators.xlerobot.turn],
     keys: ['KeyW', 'KeyS', 'KeyA', 'KeyD'],
     speed: 1,
   },
   arms: [
     {
-      indices: [2, 3, 4, 5, 6, 7],
+      actuators: [
+        ModelActuators.xlerobot.Rotation_L,
+        ModelActuators.xlerobot.Pitch_L,
+        ModelActuators.xlerobot.Elbow_L,
+        ModelActuators.xlerobot.Wrist_Pitch_L,
+        ModelActuators.xlerobot.Wrist_Roll_L,
+        ModelActuators.xlerobot.Jaw_L,
+      ],
       keys: ['Digit7', 'KeyY', 'Digit9', 'KeyI', 'Digit8', 'KeyU', 'Digit0', 'KeyO', 'Minus', 'KeyP', 'KeyV'],
       initialJoints: XLEROBOT_HOME_JOINTS.slice(2, 8),
     },
     {
-      indices: [8, 9, 10, 11, 12, 13],
+      actuators: [
+        ModelActuators.xlerobot.Rotation_R,
+        ModelActuators.xlerobot.Pitch_R,
+        ModelActuators.xlerobot.Elbow_R,
+        ModelActuators.xlerobot.Wrist_Pitch_R,
+        ModelActuators.xlerobot.Wrist_Roll_R,
+        ModelActuators.xlerobot.Jaw_R,
+      ],
       keys: ['KeyH', 'KeyN', 'KeyK', 'Comma', 'KeyJ', 'KeyM', 'KeyL', 'Period', 'Semicolon', 'Slash', 'KeyB'],
       initialJoints: XLEROBOT_HOME_JOINTS.slice(8, 14),
     },
   ],
   head: {
-    indices: [14, 15],
+    actuators: [ModelActuators.xlerobot.head_pan, ModelActuators.xlerobot.head_tilt],
     keys: ['KeyR', 'KeyT', 'KeyF', 'KeyG'],
   },
 };

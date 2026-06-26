@@ -1,5 +1,6 @@
 import { ModelActuators, ModelCameras, ModelJoints, ModelSites, withSplatEnvironment } from 'mujoco-react';
 import type {
+  Actuators,
   CameraFrameMountSelector,
   IkConfig,
   PairedSplatEnvironmentConfig,
@@ -15,6 +16,11 @@ export interface DatasetCameraConfig {
   >;
 }
 
+export interface HoldCtrlPreset {
+  actuators: readonly Actuators[];
+  values: readonly number[];
+}
+
 export interface ModelEntry {
   label: string;
   config: SceneConfig;
@@ -23,7 +29,7 @@ export interface ModelEntry {
   hasIk: boolean;
   ikConfig?: IkConfig;
   gizmoScale?: number;
-  holdCtrl?: number[];
+  holdCtrl?: HoldCtrlPreset;
   splatEnvironment?: PairedSplatEnvironmentConfig;
   datasetCameras?: DatasetCameraConfig;
 }
@@ -90,12 +96,28 @@ const SPOT_HOME_QPOS = [
   0, 1.04, -1.8,
 ];
 
-const SPOT_HOME_CTRL = [
-  0, 1.04, -1.8,
-  0, 1.04, -1.8,
-  0, 1.04, -1.8,
-  0, 1.04, -1.8,
-];
+const SPOT_HOME_CTRL: HoldCtrlPreset = {
+  actuators: [
+    ModelActuators.spot.fl_hx,
+    ModelActuators.spot.fl_hy,
+    ModelActuators.spot.fl_kn,
+    ModelActuators.spot.fr_hx,
+    ModelActuators.spot.fr_hy,
+    ModelActuators.spot.fr_kn,
+    ModelActuators.spot.hl_hx,
+    ModelActuators.spot.hl_hy,
+    ModelActuators.spot.hl_kn,
+    ModelActuators.spot.hr_hx,
+    ModelActuators.spot.hr_hy,
+    ModelActuators.spot.hr_kn,
+  ],
+  values: [
+    0, 1.04, -1.8,
+    0, 1.04, -1.8,
+    0, 1.04, -1.8,
+    0, 1.04, -1.8,
+  ],
+};
 
 const G1_STAND_QPOS = [
   0, 0, 0.79, 1, 0, 0, 0,
@@ -106,13 +128,46 @@ const G1_STAND_QPOS = [
   0.2, -0.2, 0, 1.28, 0, 0, 0,
 ];
 
-const G1_STAND_CTRL = [
-  0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0,
-  0, 0, 0,
-  0.2, 0.2, 0, 1.28, 0, 0, 0,
-  0.2, -0.2, 0, 1.28, 0, 0, 0,
-];
+const G1_STAND_CTRL: HoldCtrlPreset = {
+  actuators: [
+    ModelActuators.g1.left_hip_pitch_joint,
+    ModelActuators.g1.left_hip_roll_joint,
+    ModelActuators.g1.left_hip_yaw_joint,
+    ModelActuators.g1.left_knee_joint,
+    ModelActuators.g1.left_ankle_pitch_joint,
+    ModelActuators.g1.left_ankle_roll_joint,
+    ModelActuators.g1.right_hip_pitch_joint,
+    ModelActuators.g1.right_hip_roll_joint,
+    ModelActuators.g1.right_hip_yaw_joint,
+    ModelActuators.g1.right_knee_joint,
+    ModelActuators.g1.right_ankle_pitch_joint,
+    ModelActuators.g1.right_ankle_roll_joint,
+    ModelActuators.g1.waist_yaw_joint,
+    ModelActuators.g1.waist_roll_joint,
+    ModelActuators.g1.waist_pitch_joint,
+    ModelActuators.g1.left_shoulder_pitch_joint,
+    ModelActuators.g1.left_shoulder_roll_joint,
+    ModelActuators.g1.left_shoulder_yaw_joint,
+    ModelActuators.g1.left_elbow_joint,
+    ModelActuators.g1.left_wrist_roll_joint,
+    ModelActuators.g1.left_wrist_pitch_joint,
+    ModelActuators.g1.left_wrist_yaw_joint,
+    ModelActuators.g1.right_shoulder_pitch_joint,
+    ModelActuators.g1.right_shoulder_roll_joint,
+    ModelActuators.g1.right_shoulder_yaw_joint,
+    ModelActuators.g1.right_elbow_joint,
+    ModelActuators.g1.right_wrist_roll_joint,
+    ModelActuators.g1.right_wrist_pitch_joint,
+    ModelActuators.g1.right_wrist_yaw_joint,
+  ],
+  values: [
+    0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0,
+    0, 0, 0,
+    0.2, 0.2, 0, 1.28, 0, 0, 0,
+    0.2, -0.2, 0, 1.28, 0, 0, 0,
+  ],
+};
 
 const XLEROBOT_KITCHEN_SPLAT: PairedSplatEnvironmentConfig = {
   id: 'xlerobot-kitchen-splat',

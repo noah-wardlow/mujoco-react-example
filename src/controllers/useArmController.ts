@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
-import { useBeforePhysicsStep } from 'mujoco-react';
-import type { IkContextValue } from 'mujoco-react';
+import { controlGroup, useBeforePhysicsStep, useControlGroup } from 'mujoco-react';
+import type { Actuators, ControlGroupHandle, IkContextValue } from 'mujoco-react';
 import { inverseKinematics2Link } from './ik2link';
 import { forwardKinematics2Link } from './fk2link';
 import type { LinkageParams } from './ik2link';
@@ -8,8 +8,8 @@ import type { LinkageParams } from './ik2link';
 export type { LinkageParams } from './ik2link';
 
 export interface ArmConfig {
-  /** Actuator indices: [rotation, pitch, elbow, wristPitch, wristRoll, gripper] */
-  indices: number[];
+  /** Actuators: [rotation, pitch, elbow, wristPitch, wristRoll, gripper] */
+  actuators: Actuators[];
   /** Key bindings: [rotCW, rotCCW, eeForward, eeBack, eeUp, eeDown, pitchUp, pitchDown, rollCW, rollCCW, gripperToggle] */
   keys: string[];
   /** Initial joint values — if provided, arm starts here instead of IK-computed default. */
@@ -29,23 +29,21 @@ export interface ArmConfig {
 }
 
 export interface BaseConfig {
-  /** Actuator indices: [forward, turn] */
-  indices: [number, number];
+  /** Actuators: [forward, turn] */
+  actuators: [Actuators, Actuators];
   /** Key bindings: [forward, back, turnLeft, turnRight] */
   keys: [string, string, string, string];
   speed?: number;
 }
 
 export interface HeadConfig {
-  /** Actuator indices: [pan, tilt] */
-  indices: [number, number];
+  /** Actuators: [pan, tilt] */
+  actuators: [Actuators, Actuators];
   /** Key bindings: [panLeft, panRight, tiltUp, tiltDown] */
   keys: [string, string, string, string];
 }
 
 export interface ArmControllerConfig {
-  /** Total number of actuators */
-  numActuators: number;
   /** Base (mobile) drive config — omit for fixed-base robots */
   base?: BaseConfig;
   /** Arm configs — one per arm */
@@ -62,6 +60,18 @@ const DEFAULT_GRIPPER_OPEN = 1.5;
 const DEFAULT_GRIPPER_CLOSED = -0.25;
 const INITIAL_EE: [number, number] = [0.162, 0.118];
 
+function setOrderedControls<K extends Actuators>(
+  group: ControlGroupHandle<K>,
+  actuators: readonly K[],
+  values: ArrayLike<number>
+) {
+  const next: Partial<Record<K, number>> = {};
+  for (let i = 0; i < Math.min(actuators.length, values.length); i++) {
+    next[actuators[i]] = values[i];
+  }
+  group.patch(next, { force: true });
+}
+
 /**
  * Generic arm controller hook — configure arms, base, head via a single config.
  * Handles IK, gripper toggles, base velocity, and head pan/tilt.
@@ -71,10 +81,16 @@ const INITIAL_EE: [number, number] = [0.162, 0.118];
  */
 export function useArmController(config: ArmControllerConfig, ik?: IkContextValue | null) {
   const keys = useRef<Record<string, boolean>>({});
+  const controllerActuators = [
+    ...(config.base?.actuators ?? []),
+    ...config.arms.flatMap((arm) => arm.actuators),
+    ...(config.head?.actuators ?? []),
+  ];
+  const controls = useControlGroup(controlGroup(controllerActuators));
 
   const armStates = useRef(
     config.arms.map((arm) => {
-      const targetJoints = new Float64Array(arm.indices.length);
+      const targetJoints = new Float64Array(arm.actuators.length);
       const gripperClosed = arm.gripperClosed ?? DEFAULT_GRIPPER_CLOSED;
       let eePos = [INITIAL_EE[0], INITIAL_EE[1]];
       let pitch = 0;
@@ -122,7 +138,7 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
     };
   }, []);
 
-  useBeforePhysicsStep(({ data }) => {
+  useBeforePhysicsStep(() => {
     const k = keys.current;
 
     // === Base ===
@@ -130,26 +146,28 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
       const b = config.base;
       const bs = baseState.current;
       const speed = b.speed ?? 1;
+      const forwardActuator = b.actuators[0];
+      const turnActuator = b.actuators[1];
 
       if (k[b.keys[0]]) {
-        data.ctrl[b.indices[0]] = -speed;
+        controls.set(forwardActuator, -speed, { force: true });
         bs.prevActive[0] = true;
       } else if (k[b.keys[1]]) {
-        data.ctrl[b.indices[0]] = speed;
+        controls.set(forwardActuator, speed, { force: true });
         bs.prevActive[0] = true;
       } else if (bs.prevActive[0]) {
-        data.ctrl[b.indices[0]] = 0;
+        controls.set(forwardActuator, 0, { force: true });
         bs.prevActive[0] = false;
       }
 
       if (k[b.keys[2]]) {
-        data.ctrl[b.indices[1]] = speed;
+        controls.set(turnActuator, speed, { force: true });
         bs.prevActive[1] = true;
       } else if (k[b.keys[3]]) {
-        data.ctrl[b.indices[1]] = -speed;
+        controls.set(turnActuator, -speed, { force: true });
         bs.prevActive[1] = true;
       } else if (bs.prevActive[1]) {
-        data.ctrl[b.indices[1]] = 0;
+        controls.set(turnActuator, 0, { force: true });
         bs.prevActive[1] = false;
       }
     }
@@ -172,8 +190,9 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
       // On transition from idle to keyboard: sync state from current ctrl
       // (picks up IK gizmo position, post-reset homeJoints, or any external ctrl change)
       if (anyArmKey && !s.controlActive) {
-        for (let j = 0; j < arm.indices.length; j++) {
-          s.targetJoints[j] = data.ctrl[arm.indices[j]];
+        const currentCtrl = controls.read();
+        for (let j = 0; j < arm.actuators.length; j++) {
+          s.targetJoints[j] = currentCtrl[arm.actuators[j]];
         }
         const [x, y] = forwardKinematics2Link(s.targetJoints[1], s.targetJoints[2], arm.linkage);
         s.eePos[0] = x;
@@ -228,12 +247,11 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
 
       // Write arm joints to ctrl only when keyboard is active
       if (s.controlActive) {
-        for (let j = 0; j < arm.indices.length; j++) {
-          data.ctrl[arm.indices[j]] = s.targetJoints[j];
-        }
+        setOrderedControls(controls, arm.actuators, s.targetJoints);
       }
       // Always write gripper (last index) — independent of IK
-      data.ctrl[arm.indices[arm.indices.length - 1]] = s.targetJoints[arm.indices.length - 1];
+      const gripperActuator = arm.actuators[arm.actuators.length - 1];
+      controls.set(gripperActuator, s.targetJoints[arm.actuators.length - 1], { force: true });
     }
 
     // === Head ===
@@ -246,8 +264,7 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
       if (k[h.keys[2]]) hs[1] += JOINT_STEP * 2;
       if (k[h.keys[3]]) hs[1] -= JOINT_STEP * 2;
 
-      data.ctrl[h.indices[0]] = hs[0];
-      data.ctrl[h.indices[1]] = hs[1];
+      setOrderedControls(controls, h.actuators, hs);
     }
   });
 }

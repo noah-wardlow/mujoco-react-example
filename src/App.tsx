@@ -17,6 +17,8 @@ import {
   useGravityCompensation,
   useBeforePhysicsStep,
   useCameraStream,
+  controlGroup,
+  useControlGroup,
   CAPTURE_EXCLUDE_KEY,
 } from 'mujoco-react';
 import { SparkSplatEnvironment } from 'mujoco-react/spark';
@@ -29,7 +31,7 @@ import type {
   ScenarioLightingPreset,
   VisualScenarioConfig,
 } from 'mujoco-react';
-import type { DatasetCameraConfig } from './configs';
+import type { DatasetCameraConfig, HoldCtrlPreset } from './configs';
 import { models } from './configs';
 import { FrankaController } from './controllers/FrankaController';
 import { SO101Controller } from './controllers/SO101Controller';
@@ -99,12 +101,13 @@ function ClickSelectOverlay() {
   return null;
 }
 
-function HoldCtrl({ values }: { values?: number[] }) {
-  useBeforePhysicsStep(({ model, data }) => {
-    if (!values) return;
-    for (let i = 0; i < Math.min(values.length, model.nu); i++) {
-      data.ctrl[i] = values[i];
-    }
+function HoldCtrl({ preset }: { preset?: HoldCtrlPreset }) {
+  const group = useMemo(() => controlGroup(preset?.actuators ?? []), [preset]);
+  const controls = useControlGroup(group);
+
+  useBeforePhysicsStep(() => {
+    if (!preset) return;
+    controls.write(preset.values, { force: true });
   });
   return null;
 }
@@ -121,14 +124,14 @@ function SceneChildren({
   ikConfig: IkConfig | null;
   showGizmo: boolean;
   gizmoScale?: number;
-  holdCtrl?: number[];
+  holdCtrl?: HoldCtrlPreset;
 }) {
   const ik = useIkController(ikConfig);
 
   return (
     <>
       {ik && showGizmo && <IkGizmo controller={ik} scale={gizmoScale} />}
-      <HoldCtrl values={holdCtrl} />
+      <HoldCtrl preset={holdCtrl} />
 
       {/* Per-model controllers — swap in your own */}
       {modelKey === 'franka' && <FrankaController />}
