@@ -9,7 +9,7 @@ export default defineConfig({
     mujocoReact({
       models: {
         franka: 'public/models/franka_emika_panda/scene.xml',
-        so101: 'public/models/so101/SO101.xml',
+        so101OverheadBimanual: 'public/models/so101_overhead_bimanual/so101_overhead_bimanual.xml',
         xlerobot: 'public/models/xlerobot/xlerobot.xml',
         spot: 'public/models/boston_dynamics_spot/scene.xml',
         g1: 'public/models/unitree_g1/scene.xml',

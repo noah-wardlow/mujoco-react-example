@@ -8,15 +8,6 @@ const HELP: Record<string, string[]> = {
     `${MOD}+click — Drag body`,
     'Double-click — Select body',
   ],
-  so101: [
-    'W/S — Arm forward/back',
-    'Q/E — Arm up/down',
-    'A/D — Shoulder rotate',
-    'R/F — Wrist pitch',
-    'Z/C — Wrist roll',
-    'V — Toggle gripper',
-    'Double-click — Select body',
-  ],
   xlerobot: [
     'W/S — Drive forward/back',
     'A/D — Turn left/right',
@@ -26,6 +17,14 @@ const HELP: Record<string, string[]> = {
     'H/N J/M K/, L/. ;// — Right arm',
     'V/B — Toggle grippers (L/R)',
     'R/T F/G — Head pan/tilt',
+    'Double-click — Select body',
+  ],
+  so101OverheadBimanual: [
+    '7/Y — Left shoulder rotate',
+    '8/U 9/I — Left arm IK',
+    '0/O — Left pitch  -/P — Left roll',
+    'H/N J/M K/, L/. ;// — Right arm',
+    'V/B — Toggle grippers (L/R)',
     'Double-click — Select body',
   ],
   spot: [

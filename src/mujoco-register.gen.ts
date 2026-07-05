@@ -52,61 +52,69 @@ type GeneratedModelResources = {
     };
     readonly cameras: {};
   };
-  readonly so101: {
+  readonly so101OverheadBimanual: {
     readonly actuators: {
-      readonly elbow_flex: 'elbow_flex';
-      readonly gripper: 'gripper';
-      readonly shoulder_lift: 'shoulder_lift';
-      readonly shoulder_pan: 'shoulder_pan';
-      readonly wrist_flex: 'wrist_flex';
-      readonly wrist_roll: 'wrist_roll';
+      readonly Elbow_L: 'Elbow_L';
+      readonly Elbow_R: 'Elbow_R';
+      readonly Jaw_L: 'Jaw_L';
+      readonly Jaw_R: 'Jaw_R';
+      readonly Pitch_L: 'Pitch_L';
+      readonly Pitch_R: 'Pitch_R';
+      readonly Rotation_L: 'Rotation_L';
+      readonly Rotation_R: 'Rotation_R';
+      readonly Wrist_Pitch_L: 'Wrist_Pitch_L';
+      readonly Wrist_Pitch_R: 'Wrist_Pitch_R';
+      readonly Wrist_Roll_L: 'Wrist_Roll_L';
+      readonly Wrist_Roll_R: 'Wrist_Roll_R';
     };
     readonly sensors: {};
     readonly bodies: {
-      readonly base: 'base';
-      readonly camera_mount: 'camera_mount';
-      readonly gripper: 'gripper';
-      readonly lower_arm: 'lower_arm';
-      readonly moving_jaw_so101_v1: 'moving_jaw_so101_v1';
-      readonly shoulder: 'shoulder';
-      readonly upper_arm: 'upper_arm';
-      readonly wrist: 'wrist';
+      readonly Base: 'Base';
+      readonly Base_2: 'Base_2';
+      readonly Fixed_Jaw: 'Fixed_Jaw';
+      readonly Fixed_Jaw_2: 'Fixed_Jaw_2';
+      readonly Left_Arm_Camera: 'Left_Arm_Camera';
+      readonly Lower_Arm: 'Lower_Arm';
+      readonly Lower_Arm_2: 'Lower_Arm_2';
+      readonly Moving_Jaw: 'Moving_Jaw';
+      readonly Moving_Jaw_2: 'Moving_Jaw_2';
+      readonly overhead_stand: 'overhead_stand';
+      readonly Right_Arm_Camera: 'Right_Arm_Camera';
+      readonly Rotation_Pitch: 'Rotation_Pitch';
+      readonly Rotation_Pitch_2: 'Rotation_Pitch_2';
+      readonly Upper_Arm: 'Upper_Arm';
+      readonly Upper_Arm_2: 'Upper_Arm_2';
+      readonly Wrist_Pitch_Roll: 'Wrist_Pitch_Roll';
+      readonly Wrist_Pitch_Roll_2: 'Wrist_Pitch_Roll_2';
     };
     readonly joints: {
-      readonly elbow_flex: 'elbow_flex';
-      readonly gripper: 'gripper';
-      readonly shoulder_lift: 'shoulder_lift';
-      readonly shoulder_pan: 'shoulder_pan';
-      readonly wrist_flex: 'wrist_flex';
-      readonly wrist_roll: 'wrist_roll';
+      readonly Elbow_L: 'Elbow_L';
+      readonly Elbow_R: 'Elbow_R';
+      readonly Jaw_L: 'Jaw_L';
+      readonly Jaw_R: 'Jaw_R';
+      readonly Pitch_L: 'Pitch_L';
+      readonly Pitch_R: 'Pitch_R';
+      readonly Rotation_L: 'Rotation_L';
+      readonly Rotation_R: 'Rotation_R';
+      readonly Wrist_Pitch_L: 'Wrist_Pitch_L';
+      readonly Wrist_Pitch_R: 'Wrist_Pitch_R';
+      readonly Wrist_Roll_L: 'Wrist_Roll_L';
+      readonly Wrist_Roll_R: 'Wrist_Roll_R';
     };
-    readonly sites: {
-      readonly baseframe: 'baseframe';
-      readonly gripperframe: 'gripperframe';
-    };
+    readonly sites: {};
     readonly geoms: {
-      readonly camera_box1: 'camera_box1';
-      readonly camera_box2: 'camera_box2';
-      readonly fixed_jaw_box1: 'fixed_jaw_box1';
-      readonly fixed_jaw_box2: 'fixed_jaw_box2';
-      readonly fixed_jaw_box3: 'fixed_jaw_box3';
-      readonly fixed_jaw_box4: 'fixed_jaw_box4';
-      readonly fixed_jaw_box5: 'fixed_jaw_box5';
-      readonly fixed_jaw_box6: 'fixed_jaw_box6';
-      readonly fixed_jaw_box7: 'fixed_jaw_box7';
-      readonly fixed_jaw_sph_tip1: 'fixed_jaw_sph_tip1';
-      readonly fixed_jaw_sph_tip2: 'fixed_jaw_sph_tip2';
-      readonly fixed_jaw_sph_tip3: 'fixed_jaw_sph_tip3';
-      readonly moving_jaw_box1: 'moving_jaw_box1';
-      readonly moving_jaw_box2: 'moving_jaw_box2';
-      readonly moving_jaw_box3: 'moving_jaw_box3';
-      readonly moving_jaw_sph_tip1: 'moving_jaw_sph_tip1';
-      readonly moving_jaw_sph_tip2: 'moving_jaw_sph_tip2';
-      readonly moving_jaw_sph_tip3: 'moving_jaw_sph_tip3';
+      readonly left_arm_plate: 'left_arm_plate';
+      readonly overhead_cam_module: 'overhead_cam_module';
+      readonly right_arm_plate: 'right_arm_plate';
+      readonly stand_bottom: 'stand_bottom';
+      readonly stand_middle: 'stand_middle';
+      readonly stand_top: 'stand_top';
     };
     readonly keyframes: {};
     readonly cameras: {
-      readonly wrist_cam: 'wrist_cam';
+      readonly left_wrist_cam: 'left_wrist_cam';
+      readonly overhead_cam: 'overhead_cam';
+      readonly right_wrist_cam: 'right_wrist_cam';
     };
   };
   readonly xlerobot: {
@@ -404,61 +412,69 @@ const generatedModelResources: GeneratedModelResources = {
     },
     cameras: {},
   },
-  so101: {
+  so101OverheadBimanual: {
     actuators: {
-      elbow_flex: 'elbow_flex',
-      gripper: 'gripper',
-      shoulder_lift: 'shoulder_lift',
-      shoulder_pan: 'shoulder_pan',
-      wrist_flex: 'wrist_flex',
-      wrist_roll: 'wrist_roll',
+      Elbow_L: 'Elbow_L',
+      Elbow_R: 'Elbow_R',
+      Jaw_L: 'Jaw_L',
+      Jaw_R: 'Jaw_R',
+      Pitch_L: 'Pitch_L',
+      Pitch_R: 'Pitch_R',
+      Rotation_L: 'Rotation_L',
+      Rotation_R: 'Rotation_R',
+      Wrist_Pitch_L: 'Wrist_Pitch_L',
+      Wrist_Pitch_R: 'Wrist_Pitch_R',
+      Wrist_Roll_L: 'Wrist_Roll_L',
+      Wrist_Roll_R: 'Wrist_Roll_R',
     },
     sensors: {},
     bodies: {
-      base: 'base',
-      camera_mount: 'camera_mount',
-      gripper: 'gripper',
-      lower_arm: 'lower_arm',
-      moving_jaw_so101_v1: 'moving_jaw_so101_v1',
-      shoulder: 'shoulder',
-      upper_arm: 'upper_arm',
-      wrist: 'wrist',
+      Base: 'Base',
+      Base_2: 'Base_2',
+      Fixed_Jaw: 'Fixed_Jaw',
+      Fixed_Jaw_2: 'Fixed_Jaw_2',
+      Left_Arm_Camera: 'Left_Arm_Camera',
+      Lower_Arm: 'Lower_Arm',
+      Lower_Arm_2: 'Lower_Arm_2',
+      Moving_Jaw: 'Moving_Jaw',
+      Moving_Jaw_2: 'Moving_Jaw_2',
+      overhead_stand: 'overhead_stand',
+      Right_Arm_Camera: 'Right_Arm_Camera',
+      Rotation_Pitch: 'Rotation_Pitch',
+      Rotation_Pitch_2: 'Rotation_Pitch_2',
+      Upper_Arm: 'Upper_Arm',
+      Upper_Arm_2: 'Upper_Arm_2',
+      Wrist_Pitch_Roll: 'Wrist_Pitch_Roll',
+      Wrist_Pitch_Roll_2: 'Wrist_Pitch_Roll_2',
     },
     joints: {
-      elbow_flex: 'elbow_flex',
-      gripper: 'gripper',
-      shoulder_lift: 'shoulder_lift',
-      shoulder_pan: 'shoulder_pan',
-      wrist_flex: 'wrist_flex',
-      wrist_roll: 'wrist_roll',
+      Elbow_L: 'Elbow_L',
+      Elbow_R: 'Elbow_R',
+      Jaw_L: 'Jaw_L',
+      Jaw_R: 'Jaw_R',
+      Pitch_L: 'Pitch_L',
+      Pitch_R: 'Pitch_R',
+      Rotation_L: 'Rotation_L',
+      Rotation_R: 'Rotation_R',
+      Wrist_Pitch_L: 'Wrist_Pitch_L',
+      Wrist_Pitch_R: 'Wrist_Pitch_R',
+      Wrist_Roll_L: 'Wrist_Roll_L',
+      Wrist_Roll_R: 'Wrist_Roll_R',
     },
-    sites: {
-      baseframe: 'baseframe',
-      gripperframe: 'gripperframe',
-    },
+    sites: {},
     geoms: {
-      camera_box1: 'camera_box1',
-      camera_box2: 'camera_box2',
-      fixed_jaw_box1: 'fixed_jaw_box1',
-      fixed_jaw_box2: 'fixed_jaw_box2',
-      fixed_jaw_box3: 'fixed_jaw_box3',
-      fixed_jaw_box4: 'fixed_jaw_box4',
-      fixed_jaw_box5: 'fixed_jaw_box5',
-      fixed_jaw_box6: 'fixed_jaw_box6',
-      fixed_jaw_box7: 'fixed_jaw_box7',
-      fixed_jaw_sph_tip1: 'fixed_jaw_sph_tip1',
-      fixed_jaw_sph_tip2: 'fixed_jaw_sph_tip2',
-      fixed_jaw_sph_tip3: 'fixed_jaw_sph_tip3',
-      moving_jaw_box1: 'moving_jaw_box1',
-      moving_jaw_box2: 'moving_jaw_box2',
-      moving_jaw_box3: 'moving_jaw_box3',
-      moving_jaw_sph_tip1: 'moving_jaw_sph_tip1',
-      moving_jaw_sph_tip2: 'moving_jaw_sph_tip2',
-      moving_jaw_sph_tip3: 'moving_jaw_sph_tip3',
+      left_arm_plate: 'left_arm_plate',
+      overhead_cam_module: 'overhead_cam_module',
+      right_arm_plate: 'right_arm_plate',
+      stand_bottom: 'stand_bottom',
+      stand_middle: 'stand_middle',
+      stand_top: 'stand_top',
     },
     keyframes: {},
     cameras: {
-      wrist_cam: 'wrist_cam',
+      left_wrist_cam: 'left_wrist_cam',
+      overhead_cam: 'overhead_cam',
+      right_wrist_cam: 'right_wrist_cam',
     },
   },
   xlerobot: {
@@ -723,15 +739,15 @@ declare module 'mujoco-react' {
         keyframes: 'home';
         cameras: never;
       };
-      so101: {
-        actuators: 'elbow_flex' | 'gripper' | 'shoulder_lift' | 'shoulder_pan' | 'wrist_flex' | 'wrist_roll';
+      so101OverheadBimanual: {
+        actuators: 'Elbow_L' | 'Elbow_R' | 'Jaw_L' | 'Jaw_R' | 'Pitch_L' | 'Pitch_R' | 'Rotation_L' | 'Rotation_R' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
         sensors: never;
-        bodies: 'base' | 'camera_mount' | 'gripper' | 'lower_arm' | 'moving_jaw_so101_v1' | 'shoulder' | 'upper_arm' | 'wrist';
-        joints: 'elbow_flex' | 'gripper' | 'shoulder_lift' | 'shoulder_pan' | 'wrist_flex' | 'wrist_roll';
-        sites: 'baseframe' | 'gripperframe';
-        geoms: 'camera_box1' | 'camera_box2' | 'fixed_jaw_box1' | 'fixed_jaw_box2' | 'fixed_jaw_box3' | 'fixed_jaw_box4' | 'fixed_jaw_box5' | 'fixed_jaw_box6' | 'fixed_jaw_box7' | 'fixed_jaw_sph_tip1' | 'fixed_jaw_sph_tip2' | 'fixed_jaw_sph_tip3' | 'moving_jaw_box1' | 'moving_jaw_box2' | 'moving_jaw_box3' | 'moving_jaw_sph_tip1' | 'moving_jaw_sph_tip2' | 'moving_jaw_sph_tip3';
+        bodies: 'Base' | 'Base_2' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'Left_Arm_Camera' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'overhead_stand' | 'Right_Arm_Camera' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'Upper_Arm' | 'Upper_Arm_2' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
+        joints: 'Elbow_L' | 'Elbow_R' | 'Jaw_L' | 'Jaw_R' | 'Pitch_L' | 'Pitch_R' | 'Rotation_L' | 'Rotation_R' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
+        sites: never;
+        geoms: 'left_arm_plate' | 'overhead_cam_module' | 'right_arm_plate' | 'stand_bottom' | 'stand_middle' | 'stand_top';
         keyframes: never;
-        cameras: 'wrist_cam';
+        cameras: 'left_wrist_cam' | 'overhead_cam' | 'right_wrist_cam';
       };
       xlerobot: {
         actuators: 'Elbow_L' | 'Elbow_R' | 'forward' | 'head_pan' | 'head_tilt' | 'Jaw_L' | 'Jaw_R' | 'Pitch_L' | 'Pitch_R' | 'Rotation_L' | 'Rotation_R' | 'turn' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
@@ -764,19 +780,19 @@ declare module 'mujoco-react' {
         cameras: never;
       };
     };
-    actuators: 'actuator1' | 'actuator2' | 'actuator3' | 'actuator4' | 'actuator5' | 'actuator6' | 'actuator7' | 'elbow_flex' | 'Elbow_L' | 'Elbow_R' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'forward' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'gripper' | 'head_pan' | 'head_tilt' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'shoulder_lift' | 'shoulder_pan' | 'turn' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'wrist_flex' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'wrist_roll' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
+    actuators: 'actuator1' | 'actuator2' | 'actuator3' | 'actuator4' | 'actuator5' | 'actuator6' | 'actuator7' | 'Elbow_L' | 'Elbow_R' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'forward' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'gripper' | 'head_pan' | 'head_tilt' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'turn' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
     sensors: 'imu-pelvis-angular-velocity' | 'imu-pelvis-linear-acceleration' | 'imu-torso-angular-velocity' | 'imu-torso-linear-acceleration';
-    bodies: 'base' | 'Base' | 'Base_2' | 'body' | 'camera_mount' | 'chassis' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'fl_hip' | 'fl_lleg' | 'fl_uleg' | 'fr_hip' | 'fr_lleg' | 'fr_uleg' | 'gripper' | 'hand' | 'head_pan_link' | 'head_tilt_link' | 'hl_hip' | 'hl_lleg' | 'hl_uleg' | 'hr_hip' | 'hr_lleg' | 'hr_uleg' | 'left_ankle_pitch_link' | 'left_ankle_roll_link' | 'Left_Arm_Camera' | 'left_elbow_link' | 'left_finger' | 'left_hip_pitch_link' | 'left_hip_roll_link' | 'left_hip_yaw_link' | 'left_knee_link' | 'left_shoulder_pitch_link' | 'left_shoulder_roll_link' | 'left_shoulder_yaw_link' | 'left_wheel' | 'left_wrist_pitch_link' | 'left_wrist_roll_link' | 'left_wrist_yaw_link' | 'link0' | 'link1' | 'link2' | 'link3' | 'link4' | 'link5' | 'link6' | 'link7' | 'lower_arm' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'moving_jaw_so101_v1' | 'pelvis' | 'right_ankle_pitch_link' | 'right_ankle_roll_link' | 'Right_Arm_Camera' | 'right_elbow_link' | 'right_finger' | 'right_hip_pitch_link' | 'right_hip_roll_link' | 'right_hip_yaw_link' | 'right_knee_link' | 'right_shoulder_pitch_link' | 'right_shoulder_roll_link' | 'right_shoulder_yaw_link' | 'right_wheel' | 'right_wrist_pitch_link' | 'right_wrist_roll_link' | 'right_wrist_yaw_link' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'shoulder' | 'top_base_link' | 'torso_link' | 'upper_arm' | 'Upper_Arm' | 'Upper_Arm_2' | 'waist_roll_link' | 'waist_yaw_link' | 'wrist' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
-    joints: 'elbow_flex' | 'Elbow_L' | 'Elbow_R' | 'finger_joint1' | 'finger_joint2' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'gripper' | 'head_pan_joint' | 'head_tilt_joint' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'joint1' | 'joint2' | 'joint3' | 'joint4' | 'joint5' | 'joint6' | 'joint7' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wheel_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wheel_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'shoulder_lift' | 'shoulder_pan' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'wrist_flex' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'wrist_roll' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
-    sites: 'baseframe' | 'gripperframe' | 'imu_in_pelvis' | 'imu_in_torso' | 'left_foot' | 'right_foot' | 'tcp';
-    geoms: 'back_caster' | 'camera_box1' | 'camera_box2' | 'fixed_jaw_box1' | 'fixed_jaw_box2' | 'fixed_jaw_box3' | 'fixed_jaw_box4' | 'fixed_jaw_box5' | 'fixed_jaw_box6' | 'fixed_jaw_box7' | 'fixed_jaw_sph_tip1' | 'fixed_jaw_sph_tip2' | 'fixed_jaw_sph_tip3' | 'FL' | 'floor' | 'FR' | 'front_caster' | 'HL' | 'HR' | 'moving_jaw_box1' | 'moving_jaw_box2' | 'moving_jaw_box3' | 'moving_jaw_sph_tip1' | 'moving_jaw_sph_tip2' | 'moving_jaw_sph_tip3';
+    bodies: 'Base' | 'Base_2' | 'body' | 'chassis' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'fl_hip' | 'fl_lleg' | 'fl_uleg' | 'fr_hip' | 'fr_lleg' | 'fr_uleg' | 'hand' | 'head_pan_link' | 'head_tilt_link' | 'hl_hip' | 'hl_lleg' | 'hl_uleg' | 'hr_hip' | 'hr_lleg' | 'hr_uleg' | 'left_ankle_pitch_link' | 'left_ankle_roll_link' | 'Left_Arm_Camera' | 'left_elbow_link' | 'left_finger' | 'left_hip_pitch_link' | 'left_hip_roll_link' | 'left_hip_yaw_link' | 'left_knee_link' | 'left_shoulder_pitch_link' | 'left_shoulder_roll_link' | 'left_shoulder_yaw_link' | 'left_wheel' | 'left_wrist_pitch_link' | 'left_wrist_roll_link' | 'left_wrist_yaw_link' | 'link0' | 'link1' | 'link2' | 'link3' | 'link4' | 'link5' | 'link6' | 'link7' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'overhead_stand' | 'pelvis' | 'right_ankle_pitch_link' | 'right_ankle_roll_link' | 'Right_Arm_Camera' | 'right_elbow_link' | 'right_finger' | 'right_hip_pitch_link' | 'right_hip_roll_link' | 'right_hip_yaw_link' | 'right_knee_link' | 'right_shoulder_pitch_link' | 'right_shoulder_roll_link' | 'right_shoulder_yaw_link' | 'right_wheel' | 'right_wrist_pitch_link' | 'right_wrist_roll_link' | 'right_wrist_yaw_link' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'top_base_link' | 'torso_link' | 'Upper_Arm' | 'Upper_Arm_2' | 'waist_roll_link' | 'waist_yaw_link' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
+    joints: 'Elbow_L' | 'Elbow_R' | 'finger_joint1' | 'finger_joint2' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'head_pan_joint' | 'head_tilt_joint' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'joint1' | 'joint2' | 'joint3' | 'joint4' | 'joint5' | 'joint6' | 'joint7' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wheel_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wheel_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
+    sites: 'imu_in_pelvis' | 'imu_in_torso' | 'left_foot' | 'right_foot' | 'tcp';
+    geoms: 'back_caster' | 'FL' | 'floor' | 'FR' | 'front_caster' | 'HL' | 'HR' | 'left_arm_plate' | 'overhead_cam_module' | 'right_arm_plate' | 'stand_bottom' | 'stand_middle' | 'stand_top';
     keyframes: 'home' | 'stand';
-    cameras: 'dock_cam' | 'wrist_cam';
+    cameras: 'dock_cam' | 'left_wrist_cam' | 'overhead_cam' | 'right_wrist_cam';
   }
 
   export namespace ModelActuators {
     export type franka = ModelResource<'franka', 'actuators'>;
-    export type so101 = ModelResource<'so101', 'actuators'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'actuators'>;
     export type xlerobot = ModelResource<'xlerobot', 'actuators'>;
     export type spot = ModelResource<'spot', 'actuators'>;
     export type g1 = ModelResource<'g1', 'actuators'>;
@@ -784,7 +800,7 @@ declare module 'mujoco-react' {
 
   export namespace ModelSensors {
     export type franka = ModelResource<'franka', 'sensors'>;
-    export type so101 = ModelResource<'so101', 'sensors'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'sensors'>;
     export type xlerobot = ModelResource<'xlerobot', 'sensors'>;
     export type spot = ModelResource<'spot', 'sensors'>;
     export type g1 = ModelResource<'g1', 'sensors'>;
@@ -792,7 +808,7 @@ declare module 'mujoco-react' {
 
   export namespace ModelBodies {
     export type franka = ModelResource<'franka', 'bodies'>;
-    export type so101 = ModelResource<'so101', 'bodies'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'bodies'>;
     export type xlerobot = ModelResource<'xlerobot', 'bodies'>;
     export type spot = ModelResource<'spot', 'bodies'>;
     export type g1 = ModelResource<'g1', 'bodies'>;
@@ -800,7 +816,7 @@ declare module 'mujoco-react' {
 
   export namespace ModelJoints {
     export type franka = ModelResource<'franka', 'joints'>;
-    export type so101 = ModelResource<'so101', 'joints'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'joints'>;
     export type xlerobot = ModelResource<'xlerobot', 'joints'>;
     export type spot = ModelResource<'spot', 'joints'>;
     export type g1 = ModelResource<'g1', 'joints'>;
@@ -808,7 +824,7 @@ declare module 'mujoco-react' {
 
   export namespace ModelSites {
     export type franka = ModelResource<'franka', 'sites'>;
-    export type so101 = ModelResource<'so101', 'sites'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'sites'>;
     export type xlerobot = ModelResource<'xlerobot', 'sites'>;
     export type spot = ModelResource<'spot', 'sites'>;
     export type g1 = ModelResource<'g1', 'sites'>;
@@ -816,7 +832,7 @@ declare module 'mujoco-react' {
 
   export namespace ModelGeoms {
     export type franka = ModelResource<'franka', 'geoms'>;
-    export type so101 = ModelResource<'so101', 'geoms'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'geoms'>;
     export type xlerobot = ModelResource<'xlerobot', 'geoms'>;
     export type spot = ModelResource<'spot', 'geoms'>;
     export type g1 = ModelResource<'g1', 'geoms'>;
@@ -824,7 +840,7 @@ declare module 'mujoco-react' {
 
   export namespace ModelKeyframes {
     export type franka = ModelResource<'franka', 'keyframes'>;
-    export type so101 = ModelResource<'so101', 'keyframes'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'keyframes'>;
     export type xlerobot = ModelResource<'xlerobot', 'keyframes'>;
     export type spot = ModelResource<'spot', 'keyframes'>;
     export type g1 = ModelResource<'g1', 'keyframes'>;
@@ -832,7 +848,7 @@ declare module 'mujoco-react' {
 
   export namespace ModelCameras {
     export type franka = ModelResource<'franka', 'cameras'>;
-    export type so101 = ModelResource<'so101', 'cameras'>;
+    export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'cameras'>;
     export type xlerobot = ModelResource<'xlerobot', 'cameras'>;
     export type spot = ModelResource<'spot', 'cameras'>;
     export type g1 = ModelResource<'g1', 'cameras'>;

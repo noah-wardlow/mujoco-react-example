@@ -10,6 +10,8 @@ import type {
 export interface DatasetCameraConfig {
   label: string;
   cameraKeys: string[];
+  fps?: number;
+  resolution?: readonly [number, number];
   aliases: Record<
     string,
     CameraFrameMountSelector | readonly CameraFrameMountSelector[]
@@ -56,36 +58,18 @@ const FRANKA_ARM_ACTUATORS = [
   ModelActuators.franka.actuator7,
 ];
 
-const SO101_ARM_JOINTS = [
-  ModelJoints.so101.shoulder_pan,
-  ModelJoints.so101.shoulder_lift,
-  ModelJoints.so101.elbow_flex,
-  ModelJoints.so101.wrist_flex,
-  ModelJoints.so101.wrist_roll,
-];
-
-const SO101_ARM_ACTUATORS = [
-  ModelActuators.so101.shoulder_pan,
-  ModelActuators.so101.shoulder_lift,
-  ModelActuators.so101.elbow_flex,
-  ModelActuators.so101.wrist_flex,
-  ModelActuators.so101.wrist_roll,
-];
-
-const SO101_HOME_JOINTS = [
-  0,
-  -1.5707963268,
-  1.5707963268,
-  0.659999464,
-  0,
-  -0.17453,
-];
-
 export const XLEROBOT_HOME_JOINTS = [
   0, 0,
   1.5708, 1.5785, 1.5777, 0.0008, 1.57, -0.25,
   -1.5708, 1.5785, 1.5777, 0.0008, 1.57, -0.25,
   0, 0,
+];
+
+// Folded rest pose matching the SO-ARM100 overhead-cam reference photo; both arms
+// face forward (+X) so they don't cross.
+export const SO101_OVERHEAD_BIMANUAL_HOME_JOINTS = [
+  0, 3.1, 2.9, 1.4, 1.5708, 0.4,
+  0, 3.1, 2.9, 1.4, 1.5708, 0.4,
 ];
 
 const SPOT_HOME_QPOS = [
@@ -248,32 +232,25 @@ export const models: Record<string, ModelEntry> = {
     },
   },
 
-  so101: {
-    label: 'SO101',
+  so101OverheadBimanual: {
+    label: 'SO101 Overhead Bimanual',
     config: {
-      src: `${LOCAL_MODEL_BASE}so101/`,
-      sceneFile: 'SO101.xml',
-      homeJoints: SO101_HOME_JOINTS,
+      src: `${LOCAL_MODEL_BASE}so101_overhead_bimanual/`,
+      sceneFile: 'so101_overhead_bimanual.xml',
+      homeJoints: SO101_OVERHEAD_BIMANUAL_HOME_JOINTS,
       sceneObjects: [
         {
           name: 'floor',
           type: 'box',
-          size: [2, 2, 0.005],
+          size: [1.2, 1.0, 0.005],
           position: [0, 0, -0.005],
-          rgba: [0.15, 0.15, 0.2, 1],
-        },
-        {
-          name: 'table',
-          type: 'box',
-          size: [0.4, 0.4, 0.4],
-          position: [0.35, -0.3, 0.4],
-          rgba: [0.35, 0.3, 0.28, 1],
+          rgba: [0.12, 0.13, 0.14, 1],
         },
         {
           name: 'red_cube',
           type: 'box',
-          size: [0.015, 0.015, 0.015],
-          position: [0.66, -0.33, 0.815],
+          size: [0.018, 0.018, 0.018],
+          position: [0.2, -0.07, 0.018],
           rgba: [0.9, 0.2, 0.15, 1],
           mass: 0.02,
           freejoint: true,
@@ -285,8 +262,8 @@ export const models: Record<string, ModelEntry> = {
         {
           name: 'blue_cube',
           type: 'box',
-          size: [0.012, 0.012, 0.015],
-          position: [0.58, -0.32, 0.815],
+          size: [0.016, 0.016, 0.018],
+          position: [0.16, 0.07, 0.018],
           rgba: [0.15, 0.4, 0.9, 1],
           mass: 0.02,
           freejoint: true,
@@ -295,20 +272,18 @@ export const models: Record<string, ModelEntry> = {
         },
       ],
     },
-    camera: { position: [1.2, -1.2, 1.6], fov: 45 },
-    orbitTarget: [0.35, -0.3, 0.8],
-    hasIk: true,
-    ikConfig: {
-      siteName: ModelSites.so101.gripperframe,
-      joints: SO101_ARM_JOINTS,
-      actuators: SO101_ARM_ACTUATORS,
-    },
-    gizmoScale: 0.08,
+    camera: { position: [1.0, -0.6, 0.55], fov: 45 },
+    orbitTarget: [0.05, 0, 0.2],
+    hasIk: false,
     datasetCameras: {
-      label: 'SO101 wrist dataset camera',
-      cameraKeys: ['wrist'],
+      label: 'SO101 overhead + wrist cameras',
+      cameraKeys: ['overhead', 'left_wrist', 'right_wrist'],
+      fps: 30,
+      resolution: [1280, 720],
       aliases: {
-        wrist: { cameraName: ModelCameras.so101.wrist_cam },
+        overhead: { cameraName: ModelCameras.so101OverheadBimanual.overhead_cam },
+        left_wrist: { cameraName: ModelCameras.so101OverheadBimanual.left_wrist_cam },
+        right_wrist: { cameraName: ModelCameras.so101OverheadBimanual.right_wrist_cam },
       },
     },
   },

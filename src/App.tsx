@@ -34,7 +34,7 @@ import type {
 import type { DatasetCameraConfig, HoldCtrlPreset } from './configs';
 import { models } from './configs';
 import { FrankaController } from './controllers/FrankaController';
-import { SO101Controller } from './controllers/SO101Controller';
+import { SO101OverheadBimanualController } from './controllers/SO101OverheadBimanualController';
 import { XLeRobotController } from './controllers/XLeRobotController';
 import { useClickSelect } from './useClickSelect';
 import { KeyboardHelp } from './KeyboardHelp';
@@ -135,7 +135,7 @@ function SceneChildren({
 
       {/* Per-model controllers — swap in your own */}
       {modelKey === 'franka' && <FrankaController />}
-      {modelKey === 'so101' && <SO101Controller ik={ik} />}
+      {modelKey === 'so101OverheadBimanual' && <SO101OverheadBimanualController ik={ik} />}
       {modelKey === 'xlerobot' && <XLeRobotController ik={ik} />}
     </>
   );
@@ -230,6 +230,7 @@ function LiveDatasetCameras({
               fov: 55,
               near: 0.01,
               far: 100,
+              fps: config.fps,
             }}
           />
         );
@@ -333,6 +334,8 @@ function DatasetCameraPanel({
 
       <div style={{ color: '#94a3b8', marginTop: 10 }}>
         {config.cameraKeys.length} live stream{config.cameraKeys.length === 1 ? '' : 's'}
+        {config.fps ? ` · ${config.fps} FPS` : ''}
+        {config.resolution ? ` · ${config.resolution[0]}x${config.resolution[1]}` : ''}
       </div>
     </section>
   );
