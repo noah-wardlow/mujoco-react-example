@@ -1,0 +1,119 @@
+<mujoco model="quadrotor scene">
+  <!--
+    Generic X-configuration quadrotor, z-up.
+
+    Motor layout (top view, x forward, y left):
+        m4 BL  •     •  m1 FL          spins: m1,m3 = +z reaction (CCW pair)
+                 \ /                          m2,m4 = -z reaction (CW pair)
+                 / \
+        m3 BR  •     •  m2 FR
+
+    Each actuator is a site-mounted <motor> whose gear is
+    "0 0 1 0 0 ±k": 1 N thrust along body z plus k N·m of yaw
+    reaction torque per newton (k = k_d / k_T, see docs/02).
+  -->
+  <compiler autolimits="true"/>
+  <option timestep="0.002" density="1.225" viscosity="1.8e-5"/>
+
+  <visual>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.6 0.6 0.6"/>
+  </visual>
+
+  <default>
+    <geom friction="1 0.005 0.0001"/>
+    <default class="visual">
+      <geom contype="0" conaffinity="0" group="2"/>
+    </default>
+  </default>
+
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512"
+             mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8"/>
+    <material name="grid" texture="grid" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <material name="pad" rgba="0.35 0.38 0.42 1"/>
+    <material name="pillar" rgba="0.45 0.48 0.55 1"/>
+    <material name="frame" rgba="0.15 0.15 0.17 1"/>
+    <material name="accent" rgba="0.95 0.55 0.1 1"/>
+    <material name="prop_front" rgba="0.9 0.25 0.15 0.55"/>
+    <material name="prop_rear" rgba="0.2 0.22 0.26 0.55"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 4" dir="0 0 -1" directional="true"/>
+
+    <geom name="floor" type="plane" size="8 8 0.05" material="grid"/>
+    <geom name="pad" type="cylinder" size="0.3 0.005" pos="0 0 0.005" material="pad"/>
+
+    <!-- Scenery: pillars to fly around (kept clear of the built-in trajectories) -->
+    <geom name="pillar1" type="cylinder" size="0.08 0.75" pos="2.4 2.4 0.75" material="pillar"/>
+    <geom name="pillar2" type="cylinder" size="0.08 1.0" pos="-2.6 1.8 1.0" material="pillar"/>
+    <geom name="pillar3" type="box" size="0.1 0.1 0.6" pos="2.2 -2.5 0.6" material="pillar"/>
+
+    <body name="drone" pos="0 0 0.04">
+      <freejoint name="drone_free"/>
+      <site name="imu" pos="0 0 0"/>
+
+      <!-- Core + battery -->
+      <geom name="core" type="box" size="0.05 0.05 0.015" mass="0.35" material="frame"/>
+      <geom name="battery" type="box" size="0.035 0.02 0.01" pos="0 0 -0.02" mass="0.15"
+            material="accent"/>
+      <geom name="nose" type="box" size="0.012 0.008 0.006" pos="0.055 0 0.01" mass="0.005"
+            material="accent"/>
+
+      <!-- Arms -->
+      <geom name="arm1" type="capsule" size="0.008" fromto="0 0 0.012 0.106 0.106 0.022"
+            mass="0.03" material="frame"/>
+      <geom name="arm2" type="capsule" size="0.008" fromto="0 0 0.012 0.106 -0.106 0.022"
+            mass="0.03" material="frame"/>
+      <geom name="arm3" type="capsule" size="0.008" fromto="0 0 0.012 -0.106 -0.106 0.022"
+            mass="0.03" material="frame"/>
+      <geom name="arm4" type="capsule" size="0.008" fromto="0 0 0.012 -0.106 0.106 0.022"
+            mass="0.03" material="frame"/>
+
+      <!-- Motor pods -->
+      <geom name="motor1" type="cylinder" size="0.013 0.01" pos="0.106 0.106 0.028" mass="0.04"
+            material="frame"/>
+      <geom name="motor2" type="cylinder" size="0.013 0.01" pos="0.106 -0.106 0.028" mass="0.04"
+            material="frame"/>
+      <geom name="motor3" type="cylinder" size="0.013 0.01" pos="-0.106 -0.106 0.028" mass="0.04"
+            material="frame"/>
+      <geom name="motor4" type="cylinder" size="0.013 0.01" pos="-0.106 0.106 0.028" mass="0.04"
+            material="frame"/>
+
+      <!-- Prop discs (visual only; front pair tinted for orientation) -->
+      <geom name="prop1" class="visual" type="cylinder" size="0.065 0.0015" pos="0.106 0.106 0.04"
+            mass="0.005" material="prop_front"/>
+      <geom name="prop2" class="visual" type="cylinder" size="0.065 0.0015" pos="0.106 -0.106 0.04"
+            mass="0.005" material="prop_front"/>
+      <geom name="prop3" class="visual" type="cylinder" size="0.065 0.0015" pos="-0.106 -0.106 0.04"
+            mass="0.005" material="prop_rear"/>
+      <geom name="prop4" class="visual" type="cylinder" size="0.065 0.0015" pos="-0.106 0.106 0.04"
+            mass="0.005" material="prop_rear"/>
+
+      <!-- Feet -->
+      <geom name="foot1" type="sphere" size="0.007" pos="0.06 0.06 -0.033" mass="0.005"/>
+      <geom name="foot2" type="sphere" size="0.007" pos="0.06 -0.06 -0.033" mass="0.005"/>
+      <geom name="foot3" type="sphere" size="0.007" pos="-0.06 -0.06 -0.033" mass="0.005"/>
+      <geom name="foot4" type="sphere" size="0.007" pos="-0.06 0.06 -0.033" mass="0.005"/>
+
+      <!-- Thrust application points -->
+      <site name="thrust1" pos="0.106 0.106 0.028"/>
+      <site name="thrust2" pos="0.106 -0.106 0.028"/>
+      <site name="thrust3" pos="-0.106 -0.106 0.028"/>
+      <site name="thrust4" pos="-0.106 0.106 0.028"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="thrust1" site="thrust1" gear="0 0 1 0 0 0.016" ctrlrange="0 5"/>
+    <motor name="thrust2" site="thrust2" gear="0 0 1 0 0 -0.016" ctrlrange="0 5"/>
+    <motor name="thrust3" site="thrust3" gear="0 0 1 0 0 0.016" ctrlrange="0 5"/>
+    <motor name="thrust4" site="thrust4" gear="0 0 1 0 0 -0.016" ctrlrange="0 5"/>
+  </actuator>
+
+  <sensor>
+    <gyro name="gyro" site="imu"/>
+    <accelerometer name="accel" site="imu"/>
+    <framequat name="attitude" objtype="site" objname="imu"/>
+  </sensor>
+</mujoco>

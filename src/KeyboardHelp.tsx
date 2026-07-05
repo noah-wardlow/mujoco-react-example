@@ -20,6 +20,7 @@ const HELP: Record<string, string[]> = {
     'Double-click — Select body',
   ],
   so101OverheadBimanual: [
+    'Drag gizmos — Move arms (IK)',
     '7/Y — Left shoulder rotate',
     '8/U 9/I — Left arm IK',
     '0/O — Left pitch  -/P — Left roll',

@@ -120,6 +120,8 @@
                 <geom type="mesh" mesh="Fixed_Jaw_Motor" material="motor" class="visual"/>
                 <geom type="mesh" mesh="Fixed_Jaw_part1" class="collision" friction="3 0.2 0.1" condim="6"/>
                 <geom type="mesh" mesh="Fixed_Jaw_part2" class="collision" friction="3 0.2 0.1" condim="6"/>
+                <!-- Grasp point midway between the jaw pads — IK target site -->
+                <site name="gripper_L" pos="0.005 -0.065 0" size="0.005" group="4"/>
 
                 <body name="Moving_Jaw" pos="-0.0202 -0.0244 0" euler="3.1416 0 3.33">
                   <inertial pos="-0.00157495 -0.0300244 0.0192755" mass="0.012" fullinertia="6.61427e-06 1.89032e-06 5.28738e-06 -3.19807e-07 -5.90717e-09 -1.09945e-07"/>
@@ -188,6 +190,8 @@
                 <geom type="mesh" mesh="Fixed_Jaw_Motor" material="motor" class="visual"/>
                 <geom type="mesh" mesh="Fixed_Jaw_part1" class="collision" friction="3 0.2 0.1" condim="6"/>
                 <geom type="mesh" mesh="Fixed_Jaw_part2" class="collision" friction="3 0.2 0.1" condim="6"/>
+                <!-- Grasp point midway between the jaw pads — IK target site -->
+                <site name="gripper_R" pos="0.005 -0.065 0" size="0.005" group="4"/>
 
                 <body name="Moving_Jaw_2" pos="-0.0202 -0.0244 0" euler="3.1416 0 3.33">
                   <inertial pos="-0.00157495 -0.0300244 0.0192755" mass="0.012" fullinertia="6.61427e-06 1.89032e-06 5.28738e-06 -3.19807e-07 -5.90717e-09 -1.09945e-07"/>

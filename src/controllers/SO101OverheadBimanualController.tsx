@@ -33,7 +33,13 @@ const config: ArmControllerConfig = {
   ],
 };
 
-export function SO101OverheadBimanualController({ ik }: { ik?: IkContextValue | null }) {
-  useArmController(config, ik);
+export function SO101OverheadBimanualController({
+  ikLeft,
+  ikRight,
+}: {
+  ikLeft?: IkContextValue | null;
+  ikRight?: IkContextValue | null;
+}) {
+  useArmController(config, [ikLeft ?? null, ikRight ?? null]);
   return null;
 }

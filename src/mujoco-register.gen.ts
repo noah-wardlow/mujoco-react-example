@@ -5,6 +5,58 @@ import { registerModelResources } from 'mujoco-react';
 import type { ModelResource } from 'mujoco-react';
 
 type GeneratedModelResources = {
+  readonly quadrotor: {
+    readonly actuators: {
+      readonly thrust1: 'thrust1';
+      readonly thrust2: 'thrust2';
+      readonly thrust3: 'thrust3';
+      readonly thrust4: 'thrust4';
+    };
+    readonly sensors: {
+      readonly accel: 'accel';
+      readonly attitude: 'attitude';
+      readonly gyro: 'gyro';
+    };
+    readonly bodies: {
+      readonly drone: 'drone';
+    };
+    readonly joints: {};
+    readonly sites: {
+      readonly imu: 'imu';
+      readonly thrust1: 'thrust1';
+      readonly thrust2: 'thrust2';
+      readonly thrust3: 'thrust3';
+      readonly thrust4: 'thrust4';
+    };
+    readonly geoms: {
+      readonly arm1: 'arm1';
+      readonly arm2: 'arm2';
+      readonly arm3: 'arm3';
+      readonly arm4: 'arm4';
+      readonly battery: 'battery';
+      readonly core: 'core';
+      readonly floor: 'floor';
+      readonly foot1: 'foot1';
+      readonly foot2: 'foot2';
+      readonly foot3: 'foot3';
+      readonly foot4: 'foot4';
+      readonly motor1: 'motor1';
+      readonly motor2: 'motor2';
+      readonly motor3: 'motor3';
+      readonly motor4: 'motor4';
+      readonly nose: 'nose';
+      readonly pad: 'pad';
+      readonly pillar1: 'pillar1';
+      readonly pillar2: 'pillar2';
+      readonly pillar3: 'pillar3';
+      readonly prop1: 'prop1';
+      readonly prop2: 'prop2';
+      readonly prop3: 'prop3';
+      readonly prop4: 'prop4';
+    };
+    readonly keyframes: {};
+    readonly cameras: {};
+  };
   readonly franka: {
     readonly actuators: {
       readonly actuator1: 'actuator1';
@@ -101,7 +153,10 @@ type GeneratedModelResources = {
       readonly Wrist_Roll_L: 'Wrist_Roll_L';
       readonly Wrist_Roll_R: 'Wrist_Roll_R';
     };
-    readonly sites: {};
+    readonly sites: {
+      readonly gripper_L: 'gripper_L';
+      readonly gripper_R: 'gripper_R';
+    };
     readonly geoms: {
       readonly left_arm_plate: 'left_arm_plate';
       readonly overhead_cam_module: 'overhead_cam_module';
@@ -365,6 +420,58 @@ type GeneratedModelResources = {
 };
 
 const generatedModelResources: GeneratedModelResources = {
+  quadrotor: {
+    actuators: {
+      thrust1: 'thrust1',
+      thrust2: 'thrust2',
+      thrust3: 'thrust3',
+      thrust4: 'thrust4',
+    },
+    sensors: {
+      accel: 'accel',
+      attitude: 'attitude',
+      gyro: 'gyro',
+    },
+    bodies: {
+      drone: 'drone',
+    },
+    joints: {},
+    sites: {
+      imu: 'imu',
+      thrust1: 'thrust1',
+      thrust2: 'thrust2',
+      thrust3: 'thrust3',
+      thrust4: 'thrust4',
+    },
+    geoms: {
+      arm1: 'arm1',
+      arm2: 'arm2',
+      arm3: 'arm3',
+      arm4: 'arm4',
+      battery: 'battery',
+      core: 'core',
+      floor: 'floor',
+      foot1: 'foot1',
+      foot2: 'foot2',
+      foot3: 'foot3',
+      foot4: 'foot4',
+      motor1: 'motor1',
+      motor2: 'motor2',
+      motor3: 'motor3',
+      motor4: 'motor4',
+      nose: 'nose',
+      pad: 'pad',
+      pillar1: 'pillar1',
+      pillar2: 'pillar2',
+      pillar3: 'pillar3',
+      prop1: 'prop1',
+      prop2: 'prop2',
+      prop3: 'prop3',
+      prop4: 'prop4',
+    },
+    keyframes: {},
+    cameras: {},
+  },
   franka: {
     actuators: {
       actuator1: 'actuator1',
@@ -461,7 +568,10 @@ const generatedModelResources: GeneratedModelResources = {
       Wrist_Roll_L: 'Wrist_Roll_L',
       Wrist_Roll_R: 'Wrist_Roll_R',
     },
-    sites: {},
+    sites: {
+      gripper_L: 'gripper_L',
+      gripper_R: 'gripper_R',
+    },
     geoms: {
       left_arm_plate: 'left_arm_plate',
       overhead_cam_module: 'overhead_cam_module',
@@ -729,6 +839,16 @@ registerModelResources(generatedModelResources);
 declare module 'mujoco-react' {
   interface Register {
     models: {
+      quadrotor: {
+        actuators: 'thrust1' | 'thrust2' | 'thrust3' | 'thrust4';
+        sensors: 'accel' | 'attitude' | 'gyro';
+        bodies: 'drone';
+        joints: never;
+        sites: 'imu' | 'thrust1' | 'thrust2' | 'thrust3' | 'thrust4';
+        geoms: 'arm1' | 'arm2' | 'arm3' | 'arm4' | 'battery' | 'core' | 'floor' | 'foot1' | 'foot2' | 'foot3' | 'foot4' | 'motor1' | 'motor2' | 'motor3' | 'motor4' | 'nose' | 'pad' | 'pillar1' | 'pillar2' | 'pillar3' | 'prop1' | 'prop2' | 'prop3' | 'prop4';
+        keyframes: never;
+        cameras: never;
+      };
       franka: {
         actuators: 'actuator1' | 'actuator2' | 'actuator3' | 'actuator4' | 'actuator5' | 'actuator6' | 'actuator7' | 'gripper';
         sensors: never;
@@ -744,7 +864,7 @@ declare module 'mujoco-react' {
         sensors: never;
         bodies: 'Base' | 'Base_2' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'Left_Arm_Camera' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'overhead_stand' | 'Right_Arm_Camera' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'Upper_Arm' | 'Upper_Arm_2' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
         joints: 'Elbow_L' | 'Elbow_R' | 'Jaw_L' | 'Jaw_R' | 'Pitch_L' | 'Pitch_R' | 'Rotation_L' | 'Rotation_R' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
-        sites: never;
+        sites: 'gripper_L' | 'gripper_R';
         geoms: 'left_arm_plate' | 'overhead_cam_module' | 'right_arm_plate' | 'stand_bottom' | 'stand_middle' | 'stand_top';
         keyframes: never;
         cameras: 'left_wrist_cam' | 'overhead_cam' | 'right_wrist_cam';
@@ -780,17 +900,18 @@ declare module 'mujoco-react' {
         cameras: never;
       };
     };
-    actuators: 'actuator1' | 'actuator2' | 'actuator3' | 'actuator4' | 'actuator5' | 'actuator6' | 'actuator7' | 'Elbow_L' | 'Elbow_R' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'forward' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'gripper' | 'head_pan' | 'head_tilt' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'turn' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
-    sensors: 'imu-pelvis-angular-velocity' | 'imu-pelvis-linear-acceleration' | 'imu-torso-angular-velocity' | 'imu-torso-linear-acceleration';
-    bodies: 'Base' | 'Base_2' | 'body' | 'chassis' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'fl_hip' | 'fl_lleg' | 'fl_uleg' | 'fr_hip' | 'fr_lleg' | 'fr_uleg' | 'hand' | 'head_pan_link' | 'head_tilt_link' | 'hl_hip' | 'hl_lleg' | 'hl_uleg' | 'hr_hip' | 'hr_lleg' | 'hr_uleg' | 'left_ankle_pitch_link' | 'left_ankle_roll_link' | 'Left_Arm_Camera' | 'left_elbow_link' | 'left_finger' | 'left_hip_pitch_link' | 'left_hip_roll_link' | 'left_hip_yaw_link' | 'left_knee_link' | 'left_shoulder_pitch_link' | 'left_shoulder_roll_link' | 'left_shoulder_yaw_link' | 'left_wheel' | 'left_wrist_pitch_link' | 'left_wrist_roll_link' | 'left_wrist_yaw_link' | 'link0' | 'link1' | 'link2' | 'link3' | 'link4' | 'link5' | 'link6' | 'link7' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'overhead_stand' | 'pelvis' | 'right_ankle_pitch_link' | 'right_ankle_roll_link' | 'Right_Arm_Camera' | 'right_elbow_link' | 'right_finger' | 'right_hip_pitch_link' | 'right_hip_roll_link' | 'right_hip_yaw_link' | 'right_knee_link' | 'right_shoulder_pitch_link' | 'right_shoulder_roll_link' | 'right_shoulder_yaw_link' | 'right_wheel' | 'right_wrist_pitch_link' | 'right_wrist_roll_link' | 'right_wrist_yaw_link' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'top_base_link' | 'torso_link' | 'Upper_Arm' | 'Upper_Arm_2' | 'waist_roll_link' | 'waist_yaw_link' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
+    actuators: 'actuator1' | 'actuator2' | 'actuator3' | 'actuator4' | 'actuator5' | 'actuator6' | 'actuator7' | 'Elbow_L' | 'Elbow_R' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'forward' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'gripper' | 'head_pan' | 'head_tilt' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'thrust1' | 'thrust2' | 'thrust3' | 'thrust4' | 'turn' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
+    sensors: 'accel' | 'attitude' | 'gyro' | 'imu-pelvis-angular-velocity' | 'imu-pelvis-linear-acceleration' | 'imu-torso-angular-velocity' | 'imu-torso-linear-acceleration';
+    bodies: 'Base' | 'Base_2' | 'body' | 'chassis' | 'drone' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'fl_hip' | 'fl_lleg' | 'fl_uleg' | 'fr_hip' | 'fr_lleg' | 'fr_uleg' | 'hand' | 'head_pan_link' | 'head_tilt_link' | 'hl_hip' | 'hl_lleg' | 'hl_uleg' | 'hr_hip' | 'hr_lleg' | 'hr_uleg' | 'left_ankle_pitch_link' | 'left_ankle_roll_link' | 'Left_Arm_Camera' | 'left_elbow_link' | 'left_finger' | 'left_hip_pitch_link' | 'left_hip_roll_link' | 'left_hip_yaw_link' | 'left_knee_link' | 'left_shoulder_pitch_link' | 'left_shoulder_roll_link' | 'left_shoulder_yaw_link' | 'left_wheel' | 'left_wrist_pitch_link' | 'left_wrist_roll_link' | 'left_wrist_yaw_link' | 'link0' | 'link1' | 'link2' | 'link3' | 'link4' | 'link5' | 'link6' | 'link7' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'overhead_stand' | 'pelvis' | 'right_ankle_pitch_link' | 'right_ankle_roll_link' | 'Right_Arm_Camera' | 'right_elbow_link' | 'right_finger' | 'right_hip_pitch_link' | 'right_hip_roll_link' | 'right_hip_yaw_link' | 'right_knee_link' | 'right_shoulder_pitch_link' | 'right_shoulder_roll_link' | 'right_shoulder_yaw_link' | 'right_wheel' | 'right_wrist_pitch_link' | 'right_wrist_roll_link' | 'right_wrist_yaw_link' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'top_base_link' | 'torso_link' | 'Upper_Arm' | 'Upper_Arm_2' | 'waist_roll_link' | 'waist_yaw_link' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
     joints: 'Elbow_L' | 'Elbow_R' | 'finger_joint1' | 'finger_joint2' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'head_pan_joint' | 'head_tilt_joint' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'joint1' | 'joint2' | 'joint3' | 'joint4' | 'joint5' | 'joint6' | 'joint7' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wheel_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wheel_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
-    sites: 'imu_in_pelvis' | 'imu_in_torso' | 'left_foot' | 'right_foot' | 'tcp';
-    geoms: 'back_caster' | 'FL' | 'floor' | 'FR' | 'front_caster' | 'HL' | 'HR' | 'left_arm_plate' | 'overhead_cam_module' | 'right_arm_plate' | 'stand_bottom' | 'stand_middle' | 'stand_top';
+    sites: 'gripper_L' | 'gripper_R' | 'imu' | 'imu_in_pelvis' | 'imu_in_torso' | 'left_foot' | 'right_foot' | 'tcp' | 'thrust1' | 'thrust2' | 'thrust3' | 'thrust4';
+    geoms: 'arm1' | 'arm2' | 'arm3' | 'arm4' | 'back_caster' | 'battery' | 'core' | 'FL' | 'floor' | 'foot1' | 'foot2' | 'foot3' | 'foot4' | 'FR' | 'front_caster' | 'HL' | 'HR' | 'left_arm_plate' | 'motor1' | 'motor2' | 'motor3' | 'motor4' | 'nose' | 'overhead_cam_module' | 'pad' | 'pillar1' | 'pillar2' | 'pillar3' | 'prop1' | 'prop2' | 'prop3' | 'prop4' | 'right_arm_plate' | 'stand_bottom' | 'stand_middle' | 'stand_top';
     keyframes: 'home' | 'stand';
     cameras: 'dock_cam' | 'left_wrist_cam' | 'overhead_cam' | 'right_wrist_cam';
   }
 
   export namespace ModelActuators {
+    export type quadrotor = ModelResource<'quadrotor', 'actuators'>;
     export type franka = ModelResource<'franka', 'actuators'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'actuators'>;
     export type xlerobot = ModelResource<'xlerobot', 'actuators'>;
@@ -799,6 +920,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelSensors {
+    export type quadrotor = ModelResource<'quadrotor', 'sensors'>;
     export type franka = ModelResource<'franka', 'sensors'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'sensors'>;
     export type xlerobot = ModelResource<'xlerobot', 'sensors'>;
@@ -807,6 +929,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelBodies {
+    export type quadrotor = ModelResource<'quadrotor', 'bodies'>;
     export type franka = ModelResource<'franka', 'bodies'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'bodies'>;
     export type xlerobot = ModelResource<'xlerobot', 'bodies'>;
@@ -815,6 +938,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelJoints {
+    export type quadrotor = ModelResource<'quadrotor', 'joints'>;
     export type franka = ModelResource<'franka', 'joints'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'joints'>;
     export type xlerobot = ModelResource<'xlerobot', 'joints'>;
@@ -823,6 +947,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelSites {
+    export type quadrotor = ModelResource<'quadrotor', 'sites'>;
     export type franka = ModelResource<'franka', 'sites'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'sites'>;
     export type xlerobot = ModelResource<'xlerobot', 'sites'>;
@@ -831,6 +956,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelGeoms {
+    export type quadrotor = ModelResource<'quadrotor', 'geoms'>;
     export type franka = ModelResource<'franka', 'geoms'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'geoms'>;
     export type xlerobot = ModelResource<'xlerobot', 'geoms'>;
@@ -839,6 +965,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelKeyframes {
+    export type quadrotor = ModelResource<'quadrotor', 'keyframes'>;
     export type franka = ModelResource<'franka', 'keyframes'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'keyframes'>;
     export type xlerobot = ModelResource<'xlerobot', 'keyframes'>;
@@ -847,6 +974,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelCameras {
+    export type quadrotor = ModelResource<'quadrotor', 'cameras'>;
     export type franka = ModelResource<'franka', 'cameras'>;
     export type so101OverheadBimanual = ModelResource<'so101OverheadBimanual', 'cameras'>;
     export type xlerobot = ModelResource<'xlerobot', 'cameras'>;

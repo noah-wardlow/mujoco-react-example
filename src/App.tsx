@@ -31,11 +31,15 @@ import type {
   ScenarioLightingPreset,
   VisualScenarioConfig,
 } from 'mujoco-react';
-import type { DatasetCameraConfig, HoldCtrlPreset } from './configs';
+import type { DatasetCameraConfig, FlightParams, HoldCtrlPreset } from './configs';
 import { models } from './configs';
+import type { Setpoint } from './flight/cascade';
+import type { Telemetry } from './controllers/DroneFlightController';
 import { FrankaController } from './controllers/FrankaController';
+import { QuadrotorController } from './controllers/QuadrotorController';
 import { SO101OverheadBimanualController } from './controllers/SO101OverheadBimanualController';
 import { XLeRobotController } from './controllers/XLeRobotController';
+import { TelemetryPanel } from './TelemetryPanel';
 import { useClickSelect } from './useClickSelect';
 import { KeyboardHelp } from './KeyboardHelp';
 import { GitHubLink } from './GitHubLink';
@@ -116,26 +120,45 @@ function HoldCtrl({ preset }: { preset?: HoldCtrlPreset }) {
 function SceneChildren({
   modelKey,
   ikConfig,
+  ikConfig2,
   showGizmo,
   gizmoScale,
   holdCtrl,
+  flight,
+  droneTargetRef,
+  droneTelemetryRef,
 }: {
   modelKey: string;
   ikConfig: IkConfig | null;
+  ikConfig2: IkConfig | null;
   showGizmo: boolean;
   gizmoScale?: number;
   holdCtrl?: HoldCtrlPreset;
+  flight?: FlightParams;
+  droneTargetRef: RefObject<Setpoint | null>;
+  droneTelemetryRef: RefObject<Telemetry | null>;
 }) {
   const ik = useIkController(ikConfig);
+  const ik2 = useIkController(ikConfig2);
 
   return (
     <>
       {ik && showGizmo && <IkGizmo controller={ik} scale={gizmoScale} />}
+      {ik2 && showGizmo && <IkGizmo controller={ik2} scale={gizmoScale} />}
       <HoldCtrl preset={holdCtrl} />
 
       {/* Per-model controllers — swap in your own */}
+      {modelKey === 'quadrotor' && flight && (
+        <QuadrotorController
+          flight={flight}
+          targetRef={droneTargetRef}
+          telemetryRef={droneTelemetryRef}
+        />
+      )}
       {modelKey === 'franka' && <FrankaController />}
-      {modelKey === 'so101OverheadBimanual' && <SO101OverheadBimanualController ik={ik} />}
+      {modelKey === 'so101OverheadBimanual' && (
+        <SO101OverheadBimanualController ikLeft={ik} ikRight={ik2} />
+      )}
       {modelKey === 'xlerobot' && <XLeRobotController ik={ik} />}
     </>
   );
@@ -343,6 +366,8 @@ function DatasetCameraPanel({
 
 export function App() {
   const apiRef = useRef<MujocoSimAPI>(null);
+  const droneTargetRef = useRef<Setpoint | null>(null);
+  const droneTelemetryRef = useRef<Telemetry | null>(null);
   const captureMetadataRef = useRef({
     modelKey: 'franka',
     preset: defaultSceneAuthoringPreset,
@@ -470,6 +495,7 @@ export function App() {
   const canvasKey = useMemo(() => modelKey, [modelKey]);
 
   const ikConfig = entry.hasIk && entry.ikConfig ? entry.ikConfig : null;
+  const ikConfig2 = entry.hasIk && entry.ikConfig2 ? entry.ikConfig2 : null;
   const hasSplatEnvironment = Boolean(entry.splatEnvironment);
   const applySceneAuthoring = sceneAuthoring.enabled;
   const visualScenario: VisualScenarioConfig = useMemo(
@@ -562,9 +588,13 @@ export function App() {
         <SceneChildren
           modelKey={modelKey}
           ikConfig={ikConfig}
+          ikConfig2={ikConfig2}
           showGizmo={sim.gizmo}
           gizmoScale={entry.gizmoScale}
           holdCtrl={entry.holdCtrl}
+          flight={entry.flight}
+          droneTargetRef={droneTargetRef}
+          droneTelemetryRef={droneTelemetryRef}
         />
         {entry.splatEnvironment ? (
           <SparkSplatEnvironment
@@ -623,6 +653,7 @@ export function App() {
         config={entry.datasetCameras}
         canvasRefs={datasetCanvasRefs}
       />
+      {modelKey === 'quadrotor' && <TelemetryPanel telemetryRef={droneTelemetryRef} />}
       <KeyboardHelp modelKey={modelKey} />
       <GitHubLink />
     </MujocoProvider>

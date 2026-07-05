@@ -60,6 +60,16 @@ const DEFAULT_GRIPPER_OPEN = 1.5;
 const DEFAULT_GRIPPER_CLOSED = -0.25;
 const INITIAL_EE: [number, number] = [0.162, 0.118];
 
+/** Resolve the IK controller for arm `i` — a shared single controller, or one per arm. */
+function ikPerArm(
+  ik: IkContextValue | null | undefined | ReadonlyArray<IkContextValue | null>,
+  i: number
+): IkContextValue | null {
+  if (ik === null || ik === undefined) return null;
+  if (ik instanceof Array) return ik[i] ?? null;
+  return ik;
+}
+
 function setOrderedControls<K extends Actuators>(
   group: ControlGroupHandle<K>,
   actuators: readonly K[],
@@ -77,9 +87,13 @@ function setOrderedControls<K extends Actuators>(
  * Handles IK, gripper toggles, base velocity, and head pan/tilt.
  *
  * Automatically disables the library's IK solver when arm keys are pressed,
- * syncing from the current arm position so there's no jump.
+ * syncing from the current arm position so there's no jump. Pass an array of
+ * controllers (one per arm, same order as `config.arms`) for multi-arm IK.
  */
-export function useArmController(config: ArmControllerConfig, ik?: IkContextValue | null) {
+export function useArmController(
+  config: ArmControllerConfig,
+  ik?: IkContextValue | null | ReadonlyArray<IkContextValue | null>
+) {
   const keys = useRef<Record<string, boolean>>({});
   const controllerActuators = [
     ...(config.base?.actuators ?? []),
@@ -175,6 +189,7 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
     // === Arms ===
     for (let i = 0; i < config.arms.length; i++) {
       const arm = config.arms[i];
+      const armIk = ikPerArm(ik, i);
       const s = armStates.current[i];
       const ak = arm.keys;
       const tipLength = arm.tipLength ?? DEFAULT_TIP_LENGTH;
@@ -198,16 +213,16 @@ export function useArmController(config: ArmControllerConfig, ik?: IkContextValu
         s.eePos[0] = x;
         s.eePos[1] = y;
         s.pitch = s.targetJoints[3] - s.targetJoints[1] + s.targetJoints[2];
-        s.ikWasEnabled = ik?.ikEnabledRef.current ?? false;
-        if (s.ikWasEnabled) ik!.setIkEnabled(false);
+        s.ikWasEnabled = armIk?.ikEnabledRef.current ?? false;
+        if (s.ikWasEnabled) armIk!.setIkEnabled(false);
         s.controlActive = true;
       }
 
       // On transition from keyboard to idle: re-sync IK target so arm holds position
       if (!anyArmKey) {
-        if (s.controlActive && s.ikWasEnabled && ik) {
-          ik.syncTargetToSite();
-          ik.setIkEnabled(true);
+        if (s.controlActive && s.ikWasEnabled && armIk) {
+          armIk.syncTargetToSite();
+          armIk.setIkEnabled(true);
         }
         s.controlActive = false;
       }

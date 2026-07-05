@@ -23,6 +23,26 @@ export interface HoldCtrlPreset {
   values: readonly number[];
 }
 
+/** One motor of the quadrotor allocation problem (see src/flight/mixer.ts). */
+export interface DroneMotorSpec {
+  x: number;
+  y: number;
+  yawSign: 1 | -1;
+}
+
+/** Physical parameters the quadrotor flight stack needs about an airframe. */
+export interface FlightParams {
+  /** Motors in actuator order, body frame (x forward, y left). `yawSign`
+   *  must match the sign of the actuator gear's z-torque term in the MJCF. */
+  motors: readonly [DroneMotorSpec, DroneMotorSpec, DroneMotorSpec, DroneMotorSpec];
+  /** Yaw reaction torque per newton of thrust (k_d/k_T, the gear z term). */
+  kYaw: number;
+  /** Per-motor thrust ceiling, N (the actuator ctrlrange max). */
+  maxThrust: number;
+  /** diag(Ixx, Iyy, Izz) estimate used to scale attitude gains, kg·m². */
+  inertia: [number, number, number];
+}
+
 export interface ModelEntry {
   label: string;
   config: SceneConfig;
@@ -30,10 +50,13 @@ export interface ModelEntry {
   orbitTarget: [number, number, number];
   hasIk: boolean;
   ikConfig?: IkConfig;
+  /** Second IK chain (e.g. the right arm of a bimanual setup). */
+  ikConfig2?: IkConfig;
   gizmoScale?: number;
   holdCtrl?: HoldCtrlPreset;
   splatEnvironment?: PairedSplatEnvironmentConfig;
   datasetCameras?: DatasetCameraConfig;
+  flight?: FlightParams;
 }
 
 const LOCAL_MODEL_BASE = '/models/';
@@ -70,6 +93,38 @@ export const XLEROBOT_HOME_JOINTS = [
 export const SO101_OVERHEAD_BIMANUAL_HOME_JOINTS = [
   0, 3.1, 2.9, 1.4, 1.5708, 0.4,
   0, 3.1, 2.9, 1.4, 1.5708, 0.4,
+];
+
+const SO101_BIMANUAL_LEFT_ARM_JOINTS = [
+  ModelJoints.so101OverheadBimanual.Rotation_L,
+  ModelJoints.so101OverheadBimanual.Pitch_L,
+  ModelJoints.so101OverheadBimanual.Elbow_L,
+  ModelJoints.so101OverheadBimanual.Wrist_Pitch_L,
+  ModelJoints.so101OverheadBimanual.Wrist_Roll_L,
+];
+
+const SO101_BIMANUAL_LEFT_ARM_ACTUATORS = [
+  ModelActuators.so101OverheadBimanual.Rotation_L,
+  ModelActuators.so101OverheadBimanual.Pitch_L,
+  ModelActuators.so101OverheadBimanual.Elbow_L,
+  ModelActuators.so101OverheadBimanual.Wrist_Pitch_L,
+  ModelActuators.so101OverheadBimanual.Wrist_Roll_L,
+];
+
+const SO101_BIMANUAL_RIGHT_ARM_JOINTS = [
+  ModelJoints.so101OverheadBimanual.Rotation_R,
+  ModelJoints.so101OverheadBimanual.Pitch_R,
+  ModelJoints.so101OverheadBimanual.Elbow_R,
+  ModelJoints.so101OverheadBimanual.Wrist_Pitch_R,
+  ModelJoints.so101OverheadBimanual.Wrist_Roll_R,
+];
+
+const SO101_BIMANUAL_RIGHT_ARM_ACTUATORS = [
+  ModelActuators.so101OverheadBimanual.Rotation_R,
+  ModelActuators.so101OverheadBimanual.Pitch_R,
+  ModelActuators.so101OverheadBimanual.Elbow_R,
+  ModelActuators.so101OverheadBimanual.Wrist_Pitch_R,
+  ModelActuators.so101OverheadBimanual.Wrist_Roll_R,
 ];
 
 const SPOT_HOME_QPOS = [
@@ -174,6 +229,29 @@ const XLEROBOT_KITCHEN_SPLAT: PairedSplatEnvironmentConfig = {
 };
 
 export const models: Record<string, ModelEntry> = {
+  quadrotor: {
+    label: 'Quadrotor (X quad)',
+    config: {
+      src: `${LOCAL_MODEL_BASE}quadrotor/`,
+      sceneFile: 'scene.xml',
+    },
+    camera: { position: [2.6, -2.2, 1.8], fov: 45 },
+    orbitTarget: [0, 0, 0.8],
+    hasIk: false,
+    flight: {
+      // FL, FR, BR, BL — see the layout comment in scene.xml.
+      motors: [
+        { x: 0.106, y: 0.106, yawSign: 1 },
+        { x: 0.106, y: -0.106, yawSign: -1 },
+        { x: -0.106, y: -0.106, yawSign: 1 },
+        { x: -0.106, y: 0.106, yawSign: -1 },
+      ],
+      kYaw: 0.016,
+      maxThrust: 5,
+      inertia: [0.006, 0.006, 0.01],
+    },
+  },
+
   franka: {
     label: 'Franka Panda',
     config: {
@@ -274,7 +352,18 @@ export const models: Record<string, ModelEntry> = {
     },
     camera: { position: [1.0, -0.6, 0.55], fov: 45 },
     orbitTarget: [0.05, 0, 0.2],
-    hasIk: false,
+    hasIk: true,
+    ikConfig: {
+      siteName: ModelSites.so101OverheadBimanual.gripper_L,
+      joints: SO101_BIMANUAL_LEFT_ARM_JOINTS,
+      actuators: SO101_BIMANUAL_LEFT_ARM_ACTUATORS,
+    },
+    ikConfig2: {
+      siteName: ModelSites.so101OverheadBimanual.gripper_R,
+      joints: SO101_BIMANUAL_RIGHT_ARM_JOINTS,
+      actuators: SO101_BIMANUAL_RIGHT_ARM_ACTUATORS,
+    },
+    gizmoScale: 0.08,
     datasetCameras: {
       label: 'SO101 overhead + wrist cameras',
       cameraKeys: ['overhead', 'left_wrist', 'right_wrist'],

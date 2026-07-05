@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [
     mujocoReact({
       models: {
+        quadrotor: 'public/models/quadrotor/scene.xml',
         franka: 'public/models/franka_emika_panda/scene.xml',
         so101OverheadBimanual: 'public/models/so101_overhead_bimanual/so101_overhead_bimanual.xml',
         xlerobot: 'public/models/xlerobot/xlerobot.xml',
