@@ -192,3 +192,14 @@ The [Leva](https://github.com/pmndrs/leva) panel provides runtime controls:
 npm run build     # Production build
 npx tsc --noEmit  # Type check
 ```
+
+## Engine feature demo
+
+Open `/?demo=engine` (or the **MuJoCo 3.15 demos** link) to exercise analytic
+ball-joint IK, a three-input PID servo, a scalar actuator after multi-input
+actuators, indexed cloth rendering, pause/reset, and complete state snapshots.
+The existing robot playground retains its model selector, IK gizmos, flight
+controller, and mounted camera streams.
+
+The example consumes the published `mujoco-react` package. Release validation also
+links the local library with `npm link mujoco-react` before installing the release.

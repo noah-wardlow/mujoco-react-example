@@ -1,0 +1,13 @@
+.engine-demo button {
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #1e293b;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.engine-demo button:hover:not(:disabled) { background: #334155; }
+.engine-demo button:disabled { opacity: .45; cursor: default; }
+.engine-demo label { display: grid; gap: 4px; }
+.engine-demo input { width: 100%; }
+.engine-demo h1 { margin: 12px 0; }
+.engine-demo p { margin: 10px 0; }
