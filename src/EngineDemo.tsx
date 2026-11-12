@@ -67,6 +67,7 @@ function Demo() {
         </a>
         <h1 style={{ fontSize: 23 }}>MuJoCo engine demos</h1>
         <p><a style={{ color: '#7dd3fc' }} href="?demo=speculative">Speculative contacts</a> · <a style={{ color: '#7dd3fc' }} href="?demo=plastic">Plastic springs</a></p>
+        <p><a style={{ color: '#7dd3fc' }} href="?demo=runtime">Worker simulation &amp; camera observations</a></p>
         <p>Analytic ball-joint IK, multi-input PID control, and a simulated cloth surface.</p>
         <p role="status" style={{ color: '#a5b4fc' }}>
           {message}

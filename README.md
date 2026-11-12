@@ -205,3 +205,12 @@ The example consumes the published `mujoco-react` package. Release validation al
 links the local library with `npm link mujoco-react` before installing the release.
 
 The engine demo links to `/?demo=speculative` for a fast sphere/thin wall comparison and `/?demo=plastic` for elastic versus yielding springs with full-state save/restore. These scenes use the MuJoCo 4.0.1 engine bundled with mujoco-react.
+
+
+## Worker simulation demo
+
+Open `/?demo=runtime` for exact worker stepping, cancellation, reset, full snapshots,
+and three synchronized camera observations. Three live GPU camera panes remain
+interactive during long physics batches. HUD updates intentionally pass an inline
+scene config to exercise stable model lifetime. UI FPS and simulation throughput
+are shown separately. This demonstrates simulator mechanics, not a learned policy.
