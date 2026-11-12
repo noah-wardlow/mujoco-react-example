@@ -434,10 +434,47 @@ export const models: Record<string, ModelEntry> = {
     }, XLEROBOT_KITCHEN_SPLAT),
     camera: { position: [0.5, 3, 1.7], fov: 45 },
     orbitTarget: [0, 0, 0.7],
-    hasIk: false,
+    hasIk: true,
+    ikConfig: {
+      siteName: ModelSites.xlerobot.gripper_L,
+      joints: [
+        ModelJoints.xlerobot.Rotation_L,
+        ModelJoints.xlerobot.Pitch_L,
+        ModelJoints.xlerobot.Elbow_L,
+        ModelJoints.xlerobot.Wrist_Pitch_L,
+        ModelJoints.xlerobot.Wrist_Roll_L,
+      ],
+      actuators: [
+        ModelActuators.xlerobot.Rotation_L,
+        ModelActuators.xlerobot.Pitch_L,
+        ModelActuators.xlerobot.Elbow_L,
+        ModelActuators.xlerobot.Wrist_Pitch_L,
+        ModelActuators.xlerobot.Wrist_Roll_L,
+      ],
+    },
+    ikConfig2: {
+      siteName: ModelSites.xlerobot.gripper_R,
+      joints: [
+        ModelJoints.xlerobot.Rotation_R,
+        ModelJoints.xlerobot.Pitch_R,
+        ModelJoints.xlerobot.Elbow_R,
+        ModelJoints.xlerobot.Wrist_Pitch_R,
+        ModelJoints.xlerobot.Wrist_Roll_R,
+      ],
+      actuators: [
+        ModelActuators.xlerobot.Rotation_R,
+        ModelActuators.xlerobot.Pitch_R,
+        ModelActuators.xlerobot.Elbow_R,
+        ModelActuators.xlerobot.Wrist_Pitch_R,
+        ModelActuators.xlerobot.Wrist_Roll_R,
+      ],
+    },
+    gizmoScale: 0.08,
     splatEnvironment: XLEROBOT_KITCHEN_SPLAT,
     datasetCameras: {
       label: 'XLeRobot dock dataset camera',
+      fps: 30,
+      resolution: [256, 192],
       cameraKeys: ['dock'],
       aliases: {
         dock: { cameraName: ModelCameras.xlerobot.dock_cam },

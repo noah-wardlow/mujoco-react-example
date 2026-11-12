@@ -214,3 +214,11 @@ and three synchronized camera observations. Three live GPU camera panes remain
 interactive during long physics batches. HUD updates intentionally pass an inline
 scene config to exercise stable model lifetime. UI FPS and simulation throughput
 are shown separately. This demonstrates simulator mechanics, not a learned policy.
+
+XLeRobot exposes one IK gizmo per gripper. The IK gizmo toggle shows both; dragging
+one controls only that arm. Keyboard arm movement temporarily takes over that
+arm’s IK controller, while base, head, and gripper controls remain independent.
+
+Robot selection is reflected in the URL (for example `?robot=xlerobot` or
+`?robot=so101OverheadBimanual`). Reload or share that URL to open the same robot;
+unknown robot names fall back to Franka. Other query parameters are preserved.

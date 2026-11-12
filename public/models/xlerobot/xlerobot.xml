@@ -171,6 +171,7 @@
                 <geom type="mesh" mesh="Wrist_Pitch_Roll_Motor" class="collision"/>
                 
                 <body name="Fixed_Jaw" pos="0 -0.0601 0" euler="0 1.5708 0">
+                  <site name="gripper_L" pos="0.005 -0.065 0" size="0.005" group="4"/>
                   <inertial pos="0.000213627 0.000245138 -0.025187" mass="0.087" fullinertia="2.75087e-05 4.33657e-05 3.45059e-05 -3.35241e-07 -5.7352e-06 -5.17847e-08"/>
                   <joint name="Wrist_Roll_L" type="hinge" axis="0 -1 0" range="-2.7438472969992493 2.841206309382605" class="sts3215"/>
                   <!-- Visual meshes -->
@@ -254,6 +255,7 @@
                 <geom type="mesh" mesh="Wrist_Pitch_Roll_Motor" class="collision"/>
                 
                 <body name="Fixed_Jaw_2" pos="0 -0.0601 0" euler="0 1.5708 0">
+                  <site name="gripper_R" pos="0.005 -0.065 0" size="0.005" group="4"/>
                   <inertial pos="0.000213627 0.000245138 -0.025187" mass="0.087" fullinertia="2.75087e-05 4.33657e-05 3.45059e-05 -3.35241e-07 -5.7352e-06 -5.17847e-08"/>
                   <joint name="Wrist_Roll_R" type="hinge" axis="0 -1 0" range="-2.7438472969992493 2.841206309382605" class="sts3215"/>
                   <!-- Visual meshes -->

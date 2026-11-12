@@ -258,7 +258,10 @@ type GeneratedModelResources = {
       readonly Wrist_Roll_L: 'Wrist_Roll_L';
       readonly Wrist_Roll_R: 'Wrist_Roll_R';
     };
-    readonly sites: {};
+    readonly sites: {
+      readonly gripper_L: 'gripper_L';
+      readonly gripper_R: 'gripper_R';
+    };
     readonly geoms: {
       readonly back_caster: 'back_caster';
       readonly front_caster: 'front_caster';
@@ -697,7 +700,10 @@ const generatedModelResources: GeneratedModelResources = {
       Wrist_Roll_L: 'Wrist_Roll_L',
       Wrist_Roll_R: 'Wrist_Roll_R',
     },
-    sites: {},
+    sites: {
+      gripper_L: 'gripper_L',
+      gripper_R: 'gripper_R',
+    },
     geoms: {
       back_caster: 'back_caster',
       front_caster: 'front_caster',
@@ -932,7 +938,7 @@ declare module 'mujoco-react' {
         sensors: never;
         bodies: 'Base' | 'Base_2' | 'chassis' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'head_pan_link' | 'head_tilt_link' | 'Left_Arm_Camera' | 'left_wheel' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'Right_Arm_Camera' | 'right_wheel' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'top_base_link' | 'Upper_Arm' | 'Upper_Arm_2' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
         joints: 'Elbow_L' | 'Elbow_R' | 'head_pan_joint' | 'head_tilt_joint' | 'Jaw_L' | 'Jaw_R' | 'left_wheel_joint' | 'Pitch_L' | 'Pitch_R' | 'right_wheel_joint' | 'Rotation_L' | 'Rotation_R' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
-        sites: never;
+        sites: 'gripper_L' | 'gripper_R';
         geoms: 'back_caster' | 'front_caster';
         keyframes: never;
         cameras: 'dock_cam';

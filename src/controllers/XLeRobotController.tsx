@@ -42,7 +42,10 @@ const config: ArmControllerConfig = {
   },
 };
 
-export function XLeRobotController({ ik }: { ik?: IkContextValue | null }) {
-  useArmController(config, ik);
+export function XLeRobotController({ ikLeft, ikRight }: {
+  ikLeft?: IkContextValue | null;
+  ikRight?: IkContextValue | null;
+}) {
+  useArmController(config, [ikLeft ?? null, ikRight ?? null]);
   return null;
 }

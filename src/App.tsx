@@ -159,7 +159,7 @@ function SceneChildren({
       {modelKey === 'so101OverheadBimanual' && (
         <SO101OverheadBimanualController ikLeft={ik} ikRight={ik2} />
       )}
-      {modelKey === 'xlerobot' && <XLeRobotController ik={ik} />}
+      {modelKey === 'xlerobot' && <XLeRobotController ikLeft={ik} ikRight={ik2} />}
     </>
   );
 }
@@ -384,9 +384,18 @@ export function App() {
     options: { type: 'image/png' },
   });
 
-  const { model: modelKey } = useControls({
-    model: { value: 'franka', options: modelOptions, label: 'Model' },
+  const [initialModel] = useState(() => {
+    const robot = new URLSearchParams(window.location.search).get('robot');
+    return robot && Object.hasOwn(models, robot) ? robot : 'franka';
   });
+  const { model: modelKey } = useControls({
+    model: { value: initialModel, options: modelOptions, label: 'Model' },
+  });
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('robot', modelKey);
+    window.history.replaceState(window.history.state, '', url);
+  }, [modelKey]);
 
   const entry = models[modelKey];
   const datasetCameras = entry.datasetCameras;
