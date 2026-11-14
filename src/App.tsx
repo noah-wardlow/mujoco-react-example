@@ -665,6 +665,7 @@ export function App() {
       {modelKey === 'quadrotor' && <TelemetryPanel telemetryRef={droneTelemetryRef} />}
       <KeyboardHelp modelKey={modelKey} />
       <a href="?demo=engine" style={{ position: 'absolute', bottom: 18, right: 18, zIndex: 20, color: '#7dd3fc', background: '#111827dd', padding: '8px 12px', borderRadius: 8 }}>MuJoCo engine demos →</a>
+      <a href="?demo=rgbd" style={{ position: 'absolute', bottom: 62, right: 18, zIndex: 20, color: '#7dd3fc', background: '#111827dd', padding: '8px 12px', borderRadius: 8 }}>Metric RGB-D capture →</a>
       <GitHubLink />
     </MujocoProvider>
   );

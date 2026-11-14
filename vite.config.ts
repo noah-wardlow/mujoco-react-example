@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [
     mujocoReact({
       models: {
+        metricRGBD: 'public/models/metric_rgbd/scene.xml',
         engineDemo: 'public/models/engine_demo/scene.xml',
         quadrotor: 'public/models/quadrotor/scene.xml',
         franka: 'public/models/franka_emika_panda/scene.xml',

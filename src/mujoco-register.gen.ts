@@ -5,6 +5,21 @@ import { registerModelResources } from 'mujoco-react';
 import type { ModelResource } from 'mujoco-react';
 
 type GeneratedModelResources = {
+  readonly metricRGBD: {
+    readonly actuators: {};
+    readonly sensors: {};
+    readonly bodies: {};
+    readonly joints: {};
+    readonly sites: {};
+    readonly geoms: {
+      readonly far_blue: 'far_blue';
+      readonly near_red: 'near_red';
+    };
+    readonly keyframes: {};
+    readonly cameras: {
+      readonly metric_camera: 'metric_camera';
+    };
+  };
   readonly engineDemo: {
     readonly actuators: {
       readonly ball_servo: 'ball_servo';
@@ -447,6 +462,21 @@ type GeneratedModelResources = {
 };
 
 const generatedModelResources: GeneratedModelResources = {
+  metricRGBD: {
+    actuators: {},
+    sensors: {},
+    bodies: {},
+    joints: {},
+    sites: {},
+    geoms: {
+      far_blue: 'far_blue',
+      near_red: 'near_red',
+    },
+    keyframes: {},
+    cameras: {
+      metric_camera: 'metric_camera',
+    },
+  },
   engineDemo: {
     actuators: {
       ball_servo: 'ball_servo',
@@ -893,6 +923,16 @@ registerModelResources(generatedModelResources);
 declare module 'mujoco-react' {
   interface Register {
     models: {
+      metricRGBD: {
+        actuators: never;
+        sensors: never;
+        bodies: never;
+        joints: never;
+        sites: never;
+        geoms: 'far_blue' | 'near_red';
+        keyframes: never;
+        cameras: 'metric_camera';
+      };
       engineDemo: {
         actuators: 'ball_servo' | 'pid_servo' | 'slide_servo';
         sensors: never;
@@ -969,12 +1009,13 @@ declare module 'mujoco-react' {
     bodies: 'ball' | 'Base' | 'Base_2' | 'body' | 'chassis' | 'drone' | 'Fixed_Jaw' | 'Fixed_Jaw_2' | 'fl_hip' | 'fl_lleg' | 'fl_uleg' | 'fr_hip' | 'fr_lleg' | 'fr_uleg' | 'hand' | 'head_pan_link' | 'head_tilt_link' | 'hl_hip' | 'hl_lleg' | 'hl_uleg' | 'hr_hip' | 'hr_lleg' | 'hr_uleg' | 'left_ankle_pitch_link' | 'left_ankle_roll_link' | 'Left_Arm_Camera' | 'left_elbow_link' | 'left_finger' | 'left_hip_pitch_link' | 'left_hip_roll_link' | 'left_hip_yaw_link' | 'left_knee_link' | 'left_shoulder_pitch_link' | 'left_shoulder_roll_link' | 'left_shoulder_yaw_link' | 'left_wheel' | 'left_wrist_pitch_link' | 'left_wrist_roll_link' | 'left_wrist_yaw_link' | 'link0' | 'link1' | 'link2' | 'link3' | 'link4' | 'link5' | 'link6' | 'link7' | 'Lower_Arm' | 'Lower_Arm_2' | 'Moving_Jaw' | 'Moving_Jaw_2' | 'overhead_stand' | 'pelvis' | 'pid_arm' | 'right_ankle_pitch_link' | 'right_ankle_roll_link' | 'Right_Arm_Camera' | 'right_elbow_link' | 'right_finger' | 'right_hip_pitch_link' | 'right_hip_roll_link' | 'right_hip_yaw_link' | 'right_knee_link' | 'right_shoulder_pitch_link' | 'right_shoulder_roll_link' | 'right_shoulder_yaw_link' | 'right_wheel' | 'right_wrist_pitch_link' | 'right_wrist_roll_link' | 'right_wrist_yaw_link' | 'Rotation_Pitch' | 'Rotation_Pitch_2' | 'slider' | 'top_base_link' | 'torso_link' | 'Upper_Arm' | 'Upper_Arm_2' | 'waist_roll_link' | 'waist_yaw_link' | 'Wrist_Pitch_Roll' | 'Wrist_Pitch_Roll_2';
     joints: 'ball_joint' | 'Elbow_L' | 'Elbow_R' | 'finger_joint1' | 'finger_joint2' | 'fl_hx' | 'fl_hy' | 'fl_kn' | 'fr_hx' | 'fr_hy' | 'fr_kn' | 'head_pan_joint' | 'head_tilt_joint' | 'hl_hx' | 'hl_hy' | 'hl_kn' | 'hr_hx' | 'hr_hy' | 'hr_kn' | 'Jaw_L' | 'Jaw_R' | 'joint1' | 'joint2' | 'joint3' | 'joint4' | 'joint5' | 'joint6' | 'joint7' | 'left_ankle_pitch_joint' | 'left_ankle_roll_joint' | 'left_elbow_joint' | 'left_hip_pitch_joint' | 'left_hip_roll_joint' | 'left_hip_yaw_joint' | 'left_knee_joint' | 'left_shoulder_pitch_joint' | 'left_shoulder_roll_joint' | 'left_shoulder_yaw_joint' | 'left_wheel_joint' | 'left_wrist_pitch_joint' | 'left_wrist_roll_joint' | 'left_wrist_yaw_joint' | 'pid_joint' | 'Pitch_L' | 'Pitch_R' | 'right_ankle_pitch_joint' | 'right_ankle_roll_joint' | 'right_elbow_joint' | 'right_hip_pitch_joint' | 'right_hip_roll_joint' | 'right_hip_yaw_joint' | 'right_knee_joint' | 'right_shoulder_pitch_joint' | 'right_shoulder_roll_joint' | 'right_shoulder_yaw_joint' | 'right_wheel_joint' | 'right_wrist_pitch_joint' | 'right_wrist_roll_joint' | 'right_wrist_yaw_joint' | 'Rotation_L' | 'Rotation_R' | 'slide_joint' | 'waist_pitch_joint' | 'waist_roll_joint' | 'waist_yaw_joint' | 'Wrist_Pitch_L' | 'Wrist_Pitch_R' | 'Wrist_Roll_L' | 'Wrist_Roll_R';
     sites: 'ball_target' | 'gripper_L' | 'gripper_R' | 'imu' | 'imu_in_pelvis' | 'imu_in_torso' | 'left_foot' | 'right_foot' | 'tcp' | 'thrust1' | 'thrust2' | 'thrust3' | 'thrust4';
-    geoms: 'arm1' | 'arm2' | 'arm3' | 'arm4' | 'back_caster' | 'battery' | 'core' | 'FL' | 'floor' | 'foot1' | 'foot2' | 'foot3' | 'foot4' | 'FR' | 'front_caster' | 'HL' | 'HR' | 'left_arm_plate' | 'motor1' | 'motor2' | 'motor3' | 'motor4' | 'nose' | 'overhead_cam_module' | 'pad' | 'pillar1' | 'pillar2' | 'pillar3' | 'prop1' | 'prop2' | 'prop3' | 'prop4' | 'right_arm_plate' | 'stand_bottom' | 'stand_middle' | 'stand_top';
+    geoms: 'arm1' | 'arm2' | 'arm3' | 'arm4' | 'back_caster' | 'battery' | 'core' | 'far_blue' | 'FL' | 'floor' | 'foot1' | 'foot2' | 'foot3' | 'foot4' | 'FR' | 'front_caster' | 'HL' | 'HR' | 'left_arm_plate' | 'motor1' | 'motor2' | 'motor3' | 'motor4' | 'near_red' | 'nose' | 'overhead_cam_module' | 'pad' | 'pillar1' | 'pillar2' | 'pillar3' | 'prop1' | 'prop2' | 'prop3' | 'prop4' | 'right_arm_plate' | 'stand_bottom' | 'stand_middle' | 'stand_top';
     keyframes: 'home' | 'stand';
-    cameras: 'dock_cam' | 'left_wrist_cam' | 'overhead_cam' | 'right_wrist_cam';
+    cameras: 'dock_cam' | 'left_wrist_cam' | 'metric_camera' | 'overhead_cam' | 'right_wrist_cam';
   }
 
   export namespace ModelActuators {
+    export type metricRGBD = ModelResource<'metricRGBD', 'actuators'>;
     export type engineDemo = ModelResource<'engineDemo', 'actuators'>;
     export type quadrotor = ModelResource<'quadrotor', 'actuators'>;
     export type franka = ModelResource<'franka', 'actuators'>;
@@ -985,6 +1026,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelSensors {
+    export type metricRGBD = ModelResource<'metricRGBD', 'sensors'>;
     export type engineDemo = ModelResource<'engineDemo', 'sensors'>;
     export type quadrotor = ModelResource<'quadrotor', 'sensors'>;
     export type franka = ModelResource<'franka', 'sensors'>;
@@ -995,6 +1037,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelBodies {
+    export type metricRGBD = ModelResource<'metricRGBD', 'bodies'>;
     export type engineDemo = ModelResource<'engineDemo', 'bodies'>;
     export type quadrotor = ModelResource<'quadrotor', 'bodies'>;
     export type franka = ModelResource<'franka', 'bodies'>;
@@ -1005,6 +1048,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelJoints {
+    export type metricRGBD = ModelResource<'metricRGBD', 'joints'>;
     export type engineDemo = ModelResource<'engineDemo', 'joints'>;
     export type quadrotor = ModelResource<'quadrotor', 'joints'>;
     export type franka = ModelResource<'franka', 'joints'>;
@@ -1015,6 +1059,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelSites {
+    export type metricRGBD = ModelResource<'metricRGBD', 'sites'>;
     export type engineDemo = ModelResource<'engineDemo', 'sites'>;
     export type quadrotor = ModelResource<'quadrotor', 'sites'>;
     export type franka = ModelResource<'franka', 'sites'>;
@@ -1025,6 +1070,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelGeoms {
+    export type metricRGBD = ModelResource<'metricRGBD', 'geoms'>;
     export type engineDemo = ModelResource<'engineDemo', 'geoms'>;
     export type quadrotor = ModelResource<'quadrotor', 'geoms'>;
     export type franka = ModelResource<'franka', 'geoms'>;
@@ -1035,6 +1081,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelKeyframes {
+    export type metricRGBD = ModelResource<'metricRGBD', 'keyframes'>;
     export type engineDemo = ModelResource<'engineDemo', 'keyframes'>;
     export type quadrotor = ModelResource<'quadrotor', 'keyframes'>;
     export type franka = ModelResource<'franka', 'keyframes'>;
@@ -1045,6 +1092,7 @@ declare module 'mujoco-react' {
   }
 
   export namespace ModelCameras {
+    export type metricRGBD = ModelResource<'metricRGBD', 'cameras'>;
     export type engineDemo = ModelResource<'engineDemo', 'cameras'>;
     export type quadrotor = ModelResource<'quadrotor', 'cameras'>;
     export type franka = ModelResource<'franka', 'cameras'>;

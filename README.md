@@ -222,3 +222,9 @@ arm’s IK controller, while base, head, and gripper controls remain independent
 Robot selection is reflected in the URL (for example `?robot=xlerobot` or
 `?robot=so101OverheadBimanual`). Reload or share that URL to open the same robot;
 unknown robot names fall back to Franka. Other query parameters are preserved.
+
+## Metric RGB-D capture
+
+Open `?demo=rgbd` for aligned RGB/depth previews and GPU regression checks.
+The named MuJoCo camera sees reference box fronts at 2 m and 3 m, independent
+of the interactive viewer. Mirrored capture flips both arrays together.
