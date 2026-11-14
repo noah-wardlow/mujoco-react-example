@@ -20,13 +20,14 @@ function Preview({ frame }: { frame: CameraRGBDResult }) {
     ctx.putImageData(image, 0, 0);
   }
   return <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-    <figure style={{ margin: 0 }}><canvas width={frame.width} height={frame.height} ref={el => draw(el, false)} /><figcaption>sRGB · top-left origin</figcaption></figure>
+    <figure style={{ margin: 0 }}><canvas width={frame.width} height={frame.height} ref={el => draw(el, false)} /><figcaption>{frame.rgbColorSpace ?? "srgb"} · top-left origin</figcaption></figure>
     <figure style={{ margin: 0 }}><canvas width={frame.width} height={frame.height} ref={el => draw(el, true)} /><figcaption>Camera-axis depth · bright = near · black = no surface</figcaption></figure>
   </div>;
 }
 
 function Demo() {
   const api = useRef<MujocoSimAPI>(null);
+  const [appearance, setAppearance] = useState<"standard" | "mujoco-classic">("standard");
   const [ready, setReady] = useState(false);
   const [frame, setFrame] = useState<CameraRGBDResult | null>(null);
   const [message, setMessage] = useState('Loading MuJoCo…');
@@ -36,6 +37,7 @@ function Demo() {
       const result = api.current!.captureCameraRGBD({
         cameraName: 'metric_camera', width: 320, height: 240,
         mujocoCameraCompatibility: true, flipX,
+        rgbColorSpace: appearance === "mujoco-classic" ? "linear-srgb" : "srgb",
       });
       setFrame(result);
       let red = Infinity, blue = Infinity;
@@ -51,8 +53,11 @@ function Demo() {
     <a href="/" style={{ color: '#7dd3fc' }}>← Robot playground</a>
     <h1>Metric RGB-D capture</h1>
     <p>Red box front: 2 meters. Blue box front: 3 meters. Captures use the fixed MuJoCo camera; orbit the viewer independently.</p>
+    <p><label>Appearance: <select value={appearance} onChange={event => { setAppearance(event.target.value as typeof appearance); setFrame(null); }}>
+      <option value="standard">Standard</option><option value="mujoco-classic">MuJoCo classic</option>
+    </select></label> · Classic uses model lighting for native image comparisons; it does not establish physics parity.</p>
     <div style={{ height: 300, maxWidth: 800 }}>
-      <MujocoCanvas ref={api} config={config} paused camera={{ position: [4, -4, 3], up: [0, 0, 1] }}
+      <MujocoCanvas ref={api} config={config} renderOptions={{ appearance }} paused camera={{ position: [4, -4, 3], up: [0, 0, 1] }}
         onReady={() => { setReady(true); setMessage('Ready to capture'); }} onError={e => setMessage(e.message)}>
         <ambientLight intensity={1} />
         <OrbitControls target={[0, 0, -2.5]} />

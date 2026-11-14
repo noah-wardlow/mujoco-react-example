@@ -39,6 +39,21 @@ export function RGBDChecks({ onResults }: { onResults: (results: string[]) => vo
       assert(Math.abs(frame.rgb[at(32, 32) * 3] - 128) <= 1, 'RGB must be sRGB');
       close(frame.depth[at(48, 48)], 2); // axial Z, not distance along ray
     });
+    check('Linear RGB readback preserves raw bytes and shares sRGB depth', () => {
+      const raw = session.capturePixels().pixels.slice();
+      const linear = session.captureRGBD({ rgbColorSpace: 'linear-srgb' });
+      const srgb = session.captureRGBD();
+      assert(linear.rgbColorSpace === 'linear-srgb' && srgb.rgbColorSpace === 'srgb', 'encoding metadata');
+      for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+        const i = at(x, y);
+        assert(linear.depth[i] === srgb.depth[i], 'encoding changed depth');
+        for (let c = 0; c < 3; c++) assert(linear.rgb[i*3+c] === raw[((63-y)*64+x)*4+c], 'raw RGB byte mismatch');
+      }
+      assert(Math.abs(linear.rgb[at(32,32)*3] - 55) <= 1, 'gray linear byte');
+      let rejected = false;
+      try { session.captureRGBD({ rgbColorSpace: 'invalid' as 'srgb' }); } catch { rejected = true; }
+      assert(rejected, 'invalid encoding accepted');
+    });
     check('Horizontal mirroring aligns both arrays exactly', () => {
       const a = session.captureRGBD(), b = session.captureRGBD({ flipX: true });
       for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
