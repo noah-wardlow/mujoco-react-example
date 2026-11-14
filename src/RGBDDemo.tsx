@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import { MujocoCanvas, MujocoProvider } from 'mujoco-react';
 import type { CameraRGBDResult, MujocoSimAPI } from 'mujoco-react';
+import { ManagedAppearanceChecks } from './ManagedAppearanceChecks';
 import { RGBDChecks } from './RGBDChecks';
 
 const buttonStyle = { padding: '8px 14px', marginRight: 8, borderRadius: 6, background: '#1d4ed8', color: 'white', cursor: 'pointer' };
@@ -27,17 +28,16 @@ function Preview({ frame }: { frame: CameraRGBDResult }) {
 
 function Demo() {
   const api = useRef<MujocoSimAPI>(null);
-  const [appearance, setAppearance] = useState<"standard" | "mujoco-classic">("standard");
   const [ready, setReady] = useState(false);
   const [frame, setFrame] = useState<CameraRGBDResult | null>(null);
   const [message, setMessage] = useState('Loading MuJoCo…');
   const [checks, setChecks] = useState<string[]>([]);
+  const [appearanceChecks, setAppearanceChecks] = useState<string[]>([]);
   function capture(flipX = false) {
     try {
       const result = api.current!.captureCameraRGBD({
         cameraName: 'metric_camera', width: 320, height: 240,
         mujocoCameraCompatibility: true, flipX,
-        rgbColorSpace: appearance === "mujoco-classic" ? "linear-srgb" : "srgb",
       });
       setFrame(result);
       let red = Infinity, blue = Infinity;
@@ -53,22 +53,21 @@ function Demo() {
     <a href="/" style={{ color: '#7dd3fc' }}>← Robot playground</a>
     <h1>Metric RGB-D capture</h1>
     <p>Red box front: 2 meters. Blue box front: 3 meters. Captures use the fixed MuJoCo camera; orbit the viewer independently.</p>
-    <p><label>Appearance: <select value={appearance} onChange={event => { setAppearance(event.target.value as typeof appearance); setFrame(null); }}>
-      <option value="standard">Standard</option><option value="mujoco-classic">MuJoCo classic</option>
-    </select></label> · Classic uses model lighting for native image comparisons; it does not establish physics parity.</p>
+    <p>Viewer: standard lighting. Cameras: MuJoCo classic. Both are the defaults and share one simulation.</p>
     <div style={{ height: 300, maxWidth: 800 }}>
-      <MujocoCanvas ref={api} config={config} renderOptions={{ appearance }} paused camera={{ position: [4, -4, 3], up: [0, 0, 1] }}
+      <MujocoCanvas ref={api} config={config} paused camera={{ position: [4, -4, 3], up: [0, 0, 1] }}
         onReady={() => { setReady(true); setMessage('Ready to capture'); }} onError={e => setMessage(e.message)}>
         <ambientLight intensity={1} />
         <OrbitControls target={[0, 0, -2.5]} />
         <RGBDChecks onResults={setChecks} />
+        <ManagedAppearanceChecks onResults={setAppearanceChecks} />
       </MujocoCanvas>
     </div>
     <p><button style={buttonStyle} disabled={!ready} onClick={() => capture()}>Capture RGB-D</button>{' '}
       <button style={buttonStyle} disabled={!ready} onClick={() => capture(true)}>Capture mirrored RGB-D</button></p>
     <p role="status">{message}</p>
     {frame && <Preview frame={frame} />}
-    <details open><summary>GPU regression checks</summary><ul>{checks.map(c => <li key={c}>{c}</li>)}</ul></details>
+    <details open><summary>GPU regression checks</summary><ul>{[...checks,...appearanceChecks].map(c => <li key={c}>{c}</li>)}</ul></details>
   </main>;
 }
 export function RGBDDemo() { return <MujocoProvider><Demo /></MujocoProvider>; }
